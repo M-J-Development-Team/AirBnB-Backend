@@ -35,6 +35,16 @@ public class AmenitiesDAO {
 		this.amenities = amenities;
 	}
 	
+	public Amenities findById(String name) {
+		for(Amenities a: amenities.values()) {
+			if(name.equals(a.getName())) {
+				return a;
+			}
+			
+		}
+		return null;
+	}
+	
 	public ArrayList<Amenities> getAllAmenities(){
 		ArrayList<Amenities> allAmenities = new ArrayList<Amenities>();
 		

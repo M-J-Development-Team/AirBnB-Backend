@@ -1,0 +1,35 @@
+package dao;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import beans.Amenities;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.type.MapType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+
+public class AmenitiesDAO {
+	
+	private HashMap<String, Amenities> amenities = new HashMap<>();
+	
+	public AmenitiesDAO() {
+		
+	}
+	
+	public HashMap<String, Amenities> getAmenities() {
+		return amenities;
+	}
+
+
+
+
+}

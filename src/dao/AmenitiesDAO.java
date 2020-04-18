@@ -31,5 +31,20 @@ public class AmenitiesDAO {
 
 
 
+	public void setAmenities(HashMap<String, Amenities> amenities) {
+		this.amenities = amenities;
+	}
+	
+	public ArrayList<Amenities> getAllAmenities(){
+		ArrayList<Amenities> allAmenities = new ArrayList<Amenities>();
+		
+		for(Amenities a: amenities.values()) {
+			allAmenities.add(a);
+		}
+		return allAmenities;
+	}
+
+
+
 
 }

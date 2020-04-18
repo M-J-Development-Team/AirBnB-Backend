@@ -88,4 +88,52 @@ public class AmenitiesDAO {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	public void loadAmenities(String contextPath) {
+		FileWriter fileWriter = null;
+		BufferedReader in = null;
+		File file = null;
+		try {
+			file = new File(contextPath + "/amenities.txt");
+			in = new BufferedReader(new FileReader(file));
+
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+			TypeFactory factory = TypeFactory.defaultInstance();
+			MapType type = factory.constructMapType(HashMap.class, String.class, Amenities.class);
+			mapper.getFactory().configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, true);
+			amenities = ((HashMap<String, Amenities>) mapper.readValue(file, type));
+
+		} catch (FileNotFoundException fnfe) {
+			try {
+				file.createNewFile();
+				fileWriter = new FileWriter(file);
+				ObjectMapper objectMapper = new ObjectMapper();
+				objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+				objectMapper.getFactory().configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, true);
+				String kategString = objectMapper.writeValueAsString(amenities);
+
+				fileWriter.write(kategString);
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				if (fileWriter != null) {
+					try {
+						fileWriter.close();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 }

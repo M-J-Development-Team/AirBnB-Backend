@@ -118,3 +118,13 @@ public class UserDAO {
 		this.users = users;
 	}
 	
+	
+	public User findbyID(String idOne) {
+		for(User user: users.values()) {
+			if(idOne.equals(user.getIdOne())) {
+				return user;
+			}
+			
+		}
+		return null;
+	}

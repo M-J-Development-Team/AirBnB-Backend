@@ -56,5 +56,9 @@ public class AmenitiesDAO {
 
 
 
+	public AmenitiesDAO(String contextPath) {
+		amenities = new HashMap<String, Amenities>();
+		loadAmenities(contextPath);
+	}
 
 }

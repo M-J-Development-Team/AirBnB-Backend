@@ -97,3 +97,16 @@ public class UserDAO {
 		}
 	}
 	
+	public User find(User u) {
+		for(User user: users.values()) {
+			if(u.getUsername().equals(user.getUsername())) {
+				if(u.getPassword().equals(user.getPassword())) {
+					return user;
+				} else {
+					return null;
+				}
+			}
+		}
+		return null;
+	}
+	

@@ -128,3 +128,15 @@ public class UserDAO {
 		}
 		return null;
 	}
+	
+	public User findUserByUsername(String username) {
+		if(!users.containsKey(username))
+		{
+			return null;
+		}
+		
+		User u = users.get(username);
+		return u;
+	}
+	
+	

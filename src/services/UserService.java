@@ -35,3 +35,29 @@ public class UserService {
 	
 	
 
+	@POST
+	@Path("/login")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response login(User u, @Context HttpServletRequest request) {
+	
+		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
+		
+		User user = users.find(u);
+		
+		if(user == null) {
+			return Response.status(400).build();
+		}
+		
+		String idOne = UUID.randomUUID().toString();
+		user.setIdOne(idOne);		
+		
+		context.setAttribute("UserDAO", users);
+		
+		users.saveUser(context.getRealPath(""), users);
+		
+		return Response.ok(idOne).build();		
+		
+	}
+
+}

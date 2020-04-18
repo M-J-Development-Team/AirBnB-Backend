@@ -60,5 +60,32 @@ public class AmenitiesDAO {
 		amenities = new HashMap<String, Amenities>();
 		loadAmenities(contextPath);
 	}
+	
+	public void saveAmenities(String path, AmenitiesDAO amenities) {
+		
+		
+		File f = new File(path + "/amenities.txt");
+		FileWriter fileWriter = null;
+		try {
+			fileWriter = new FileWriter(f);
+
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+			objectMapper.getFactory().configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, true);
+			String kategString = objectMapper.writeValueAsString(amenities.getAmenities());
+			fileWriter.write(kategString);
+			fileWriter.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (fileWriter != null) {
+				try {
+					fileWriter.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 
 }

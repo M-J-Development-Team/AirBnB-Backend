@@ -136,4 +136,8 @@ public class AmenitiesDAO {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+			}
+		}
+	}
+
 }

@@ -15,6 +15,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import beans.Role;
 import beans.User;
 import dao.UserDAO;
 
@@ -68,13 +69,17 @@ public class UserService {
 	public Response register(User u, @Context HttpServletRequest request) {
 
 		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
+		System.out.println(users);
 		
 		if(users.getUsers().containsKey(u.getUsername())) {
 			return Response.status(400).build();
 		}
 		
+		u.setRole(Role.GUEST);
 		users.getUsers().put(u.getUsername(), u);
 		context.setAttribute("UserDAO", users);
+		
+		System.out.println(u.getRole().toString());
 		
 		users.saveUser(context.getRealPath(""), users);
 		

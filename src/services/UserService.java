@@ -79,8 +79,6 @@ public class UserService {
 		users.getUsers().put(u.getUsername(), u);
 		context.setAttribute("UserDAO", users);
 		
-		System.out.println(u.getRole().toString());
-		
 		users.saveUser(context.getRealPath(""), users);
 		
 		return Response.ok().build();

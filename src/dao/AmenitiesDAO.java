@@ -53,6 +53,16 @@ public class AmenitiesDAO {
 		}
 		return allAmenities;
 	}
+	
+	public Amenities findByName(String name) {
+		for(Amenities a : amenities.values()) {
+			if(name.equals(a.getName())) {
+				return a;
+			}
+		}
+		
+		return null;
+	}
 
 
 

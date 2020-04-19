@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,6 +31,16 @@ public class ApartmentDAO {
 	public ApartmentDAO(String contextPath) {
 		apartments = new HashMap<String, Apartment>();
 		loadApartment(contextPath);
+	}
+	
+	public Apartment findApartmentById(UUID id) {
+		for(Apartment a: apartments.values()) {
+			if(id.equals(a.getIdOne())) {
+				return a;
+			}
+			
+		}
+		return null;
 	}
 
 	private void loadApartment(String contextPath) {
@@ -84,7 +95,7 @@ public class ApartmentDAO {
 		
 	}
 	
-public void saveOglas(String path, ApartmentDAO apartments) {
+	public void saveOglas(String path, ApartmentDAO apartments) {
 		
 		
 		File f = new File(path + "/apartments.txt");

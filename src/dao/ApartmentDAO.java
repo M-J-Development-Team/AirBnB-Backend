@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.core.JsonGenerator;
 
 import beans.Apartment;
+import beans.ApartmentStatus;
 
 public class ApartmentDAO {
 	
@@ -38,10 +39,21 @@ public class ApartmentDAO {
 			if(id.equals(a.getIdOne())) {
 				return a;
 			}
-			
 		}
 		return null;
 	}
+	
+	public ArrayList<Apartment> activeApartments(){
+		ArrayList<Apartment> active = new ArrayList<Apartment>();
+		
+		for(Apartment a: apartments.values()) {
+			if(a.getStatus().equals(ApartmentStatus.ACTIVE)) {
+				active.add(a);
+			}
+		}
+		return active;
+	}
+	
 
 	private void loadApartment(String contextPath) {
 		FileWriter fileWriter = null;

@@ -1,5 +1,6 @@
 package services;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -15,8 +16,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import beans.Apartment;
 import beans.Role;
 import beans.User;
+import dao.ApartmentDAO;
 import dao.UserDAO;
 
 @Path("")
@@ -99,12 +102,39 @@ public class UserService {
 		}
 		
 		u.setRole(Role.HOST);
+		System.out.println(u.getIdOne().toString());
 		users.getUsers().put(u.getUsername(), u);
 		context.setAttribute("UserDAO", users);
+		
+		
 		
 		users.saveUser(context.getRealPath(""), users);
 		
 		return Response.ok().build();
+
+		
+	}
+	
+	@POST
+	@Path("/getallhostsactive/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllMyActiveApartments(@PathParam("id") String id, @Context HttpServletRequest request) {
+		
+		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
+		
+		User user = users.findbyID(id);
+		
+		if(user == null)
+		{
+			return Response.status(400).build();
+		}
+		
+		ArrayList<Apartment> usersActiveApartments = users.myActiveApartments(user);
+		
+		context.setAttribute("ApartmentDAO", usersActiveApartments);
+		
+		return Response.ok(usersActiveApartments).build();
 
 		
 	}

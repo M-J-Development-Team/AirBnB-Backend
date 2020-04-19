@@ -46,6 +46,7 @@ public class AmenityService {
 		}
 
 		amenities.getAmenities().put(a.getName(), a);
+		System.out.println(a.getIdOne().toString());
 		context.setAttribute("AmenitiesDAO", amenities);
 		
 		amenities.saveAmenities(context.getRealPath(""), amenities);
@@ -53,5 +54,25 @@ public class AmenityService {
 		return Response.ok().build();
 		
 	}
+	
+	@POST
+	@Path("/amenity/edit")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response editAmenity(Amenities a, @Context HttpServletRequest request) {
+		
+		AmenitiesDAO amenities = (AmenitiesDAO) context.getAttribute("AmenitiesDAO");
+		
+		amenities.getAmenities().put(a.getName(),a);
+			
+		context.setAttribute("AmenitiesDAO", amenities);
+		
+		amenities.saveAmenities(context.getRealPath(""), amenities);
+		
+		return Response.ok(a).build();
+		
+	}
+	
+
 
 }

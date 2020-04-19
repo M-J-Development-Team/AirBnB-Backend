@@ -136,5 +136,28 @@ public class UserService {
 		
 		return Response.ok(usersActiveApartments).build();
 	}
+	
+	@POST
+	@Path("/getallhostsinactive/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllMyInactiveApartments(@PathParam("id") String id, @Context HttpServletRequest request) {
+		
+		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
+		
+		User user = users.findbyID(id);
+		
+		if(user == null)
+		{
+			return Response.status(400).build();
+		}
+		
+		ArrayList<Apartment> usersInctiveApartments = users.myInactiveApartments(user);
+		
+		context.setAttribute("ApartmentDAO", usersInctiveApartments);
+		
+		return Response.ok(usersInctiveApartments).build();
+	}
+
 
 }

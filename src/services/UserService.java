@@ -59,5 +59,27 @@ public class UserService {
 		return Response.ok(idOne).build();		
 		
 	}
+	
+	
+	@POST
+	@Path("/register")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response register(User u, @Context HttpServletRequest request) {
+
+		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
+		
+		if(users.getUsers().containsKey(u.getUsername())) {
+			return Response.status(400).build();
+		}
+		
+		users.getUsers().put(u.getUsername(), u);
+		context.setAttribute("UserDAO", users);
+		
+		users.saveUser(context.getRealPath(""), users);
+		
+		return Response.ok().build();
+		
+	}
 
 }

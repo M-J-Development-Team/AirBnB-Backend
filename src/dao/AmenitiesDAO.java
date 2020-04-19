@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 import beans.Amenities;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -35,9 +36,9 @@ public class AmenitiesDAO {
 		this.amenities = amenities;
 	}
 	
-	public Amenities findById(String name) {
+	public Amenities findById(UUID id) {
 		for(Amenities a: amenities.values()) {
-			if(name.equals(a.getName())) {
+			if(id.equals(a.getIdOne())) {
 				return a;
 			}
 			

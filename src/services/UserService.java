@@ -84,5 +84,29 @@ public class UserService {
 		return Response.ok().build();
 		
 	}
+	
+	@POST
+	@Path("/addhost")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addHost(User u, @Context HttpServletRequest request) {
+		
+		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
+		System.out.println(users);
+		
+		if(users.getUsers().containsKey(u.getUsername())) {
+			return Response.status(400).build();
+		}
+		
+		u.setRole(Role.HOST);
+		users.getUsers().put(u.getUsername(), u);
+		context.setAttribute("UserDAO", users);
+		
+		users.saveUser(context.getRealPath(""), users);
+		
+		return Response.ok().build();
+
+		
+	}
 
 }

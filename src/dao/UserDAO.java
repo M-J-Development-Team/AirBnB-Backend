@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.core.JsonGenerator;
 
 import beans.Apartment;
+import beans.ApartmentStatus;
 import beans.Gender;
 import beans.Reservation;
 import beans.Role;
@@ -40,6 +41,32 @@ public class UserDAO {
 		users.put("admin", admin);
 		
 		
+	}
+	
+	public ArrayList<Apartment> myActiveApartments(User u) {
+		u = findUserByUsername(u.getUsername());
+		ArrayList<Apartment> myActiveApartments = new ArrayList<Apartment>();
+		
+		for(Apartment a : u.getApartmentsToRent()) {
+			if(a.getStatus().equals(ApartmentStatus.ACTIVE)) {
+				myActiveApartments.add(a);
+			}
+		}
+		
+		return myActiveApartments;
+	}
+	
+	public ArrayList<Apartment> myInactiveApartments(User u) {
+		u = findUserByUsername(u.getUsername());
+		ArrayList<Apartment> myInctiveApartments = new ArrayList<Apartment>();
+		
+		for(Apartment a : u.getApartmentsToRent()) {
+			if(a.getStatus().equals(ApartmentStatus.INACTIVE)) {
+				myInctiveApartments.add(a);
+			}
+		}
+		
+		return myInctiveApartments;
 	}
 	
 	@SuppressWarnings("unchecked")

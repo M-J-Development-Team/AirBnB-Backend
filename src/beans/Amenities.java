@@ -7,6 +7,9 @@ public class Amenities {
 	UUID idOne = UUID.randomUUID();
 	private String name;
 	
+	private Amenities() {
+		
+	}
 	public Amenities(UUID idOne, String name) {
 		super();
 		this.idOne = idOne;

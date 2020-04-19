@@ -135,8 +135,6 @@ public class UserService {
 		context.setAttribute("ApartmentDAO", usersActiveApartments);
 		
 		return Response.ok(usersActiveApartments).build();
-
-		
 	}
 
 }

@@ -6,14 +6,16 @@ public class Amenities {
 	
 	UUID idOne = UUID.randomUUID();
 	private String name;
+	private AmenityStatus amenityStatus;
 	
 	private Amenities() {
 		
 	}
-	public Amenities(UUID idOne, String name) {
+	public Amenities(UUID idOne, String name, AmenityStatus amenityStatus) {
 		super();
 		this.idOne = idOne;
 		this.name = name;
+		this.amenityStatus = amenityStatus;
 	}
 	public UUID getIdOne() {
 		return idOne;
@@ -27,8 +29,12 @@ public class Amenities {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
+	public AmenityStatus getAmenityStatus() {
+		return amenityStatus;
+	}
+	public void setAmenityStatus(AmenityStatus amenityStatus) {
+		this.amenityStatus = amenityStatus;
+	}
 
 }
 

@@ -28,7 +28,6 @@ public class Apartment {
 	private ApartmentStatus status;
 	private ArrayList<Amenities> amenities = new ArrayList<>();
 	private ArrayList<Reservation> reservations = new ArrayList<>();
-	private ApartmentStatus apartmentStatus;
 	
 	@PostConstruct
 	public void init() {
@@ -196,17 +195,6 @@ public class Apartment {
 	public void setReservations(ArrayList<Reservation> reservations) {
 		this.reservations = reservations;
 	}
-
-
-	public ApartmentStatus getApartmentStatus() {
-		return apartmentStatus;
-	}
-
-
-	public void setApartmentStatus(ApartmentStatus apartmentStatus) {
-		this.apartmentStatus = apartmentStatus;
-	}
-	
 	
 	
 }

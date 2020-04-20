@@ -16,9 +16,11 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import beans.Amenities;
 import beans.Apartment;
 import beans.Role;
 import beans.User;
+import dao.AmenitiesDAO;
 import dao.ApartmentDAO;
 import dao.UserDAO;
 
@@ -112,9 +114,12 @@ public class UserService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUserData(@PathParam("idOne") String idOne,@Context HttpServletRequest request) {
 		
+		
 		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
 		
 		User user = users.findbyID(idOne);
+		
+		System.out.println(user.getUsername());
 			
 		if(user == null)
 		{
@@ -206,6 +211,56 @@ public class UserService {
 		context.setAttribute("ApartmentDAO", usersInctiveApartments);
 		
 		return Response.ok(usersInctiveApartments).build();
+	}
+	
+	@POST
+	@Path("/edituser")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response edit(User user) {
+		
+		System.out.println("editovan:"+user.getUsername());
+		
+		UserDAO dao = (UserDAO) context.getAttribute("UserDAO");
+		
+		User u = dao.findUserByUsername(user.getUsername());
+		
+		
+		if(u != null) {
+		
+		if(user.getName() != "") {
+			if(!user.getName().equals(u.getName())) {
+				u.setName(user.getName());
+			}
+		}
+		
+		if(user.getLastname() != "") {
+			if(!user.getLastname().equals(u.getLastname())) {
+				u.setLastname(user.getLastname());
+			}
+		}
+		
+		if(user.getPassword() != "") {
+			if(!user.getPassword().equals(u.getPassword())) {
+				u.setPassword(user.getPassword());
+			}
+		}
+		
+		if(user.getGender() != null) {
+			if(!user.getGender().equals(u.getGender())) {
+				u.setGender(user.getGender());
+			}
+		}
+		
+		
+		context.setAttribute("UserDAO", dao);
+		dao.saveUser(context.getRealPath(""), dao);
+		
+		return Response.ok(u).build();
+		} else {
+			
+			return Response.status(400).build();
+			
+		}
 	}
 
 

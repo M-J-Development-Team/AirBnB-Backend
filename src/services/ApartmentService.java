@@ -57,7 +57,7 @@ public class ApartmentService {
 		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
 		
 		Apartment ap = dao.findApartmentById(idOne);
-		ap.setApartmentStatus(ApartmentStatus.DELETED);
+		ap.setStatus(ApartmentStatus.DELETED);
 		
 		context.setAttribute("ApartmentDAO", dao);
 		

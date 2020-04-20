@@ -36,8 +36,10 @@ public class ApartmentDAO {
 	
 	public Apartment findApartmentById(String id) {
 		for(Apartment a: apartments.values()) {
-			if(id.equals(a.getIdOne().toString())) {
-				return a;
+			if(a.getStatus().equals(ApartmentStatus.ACTIVE)) {
+				if(id.equals(a.getIdOne().toString())) {
+					return a;
+				}
 			}
 		}
 		return null;

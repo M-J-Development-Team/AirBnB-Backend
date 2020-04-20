@@ -11,6 +11,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -62,21 +63,19 @@ public class AmenityService {
 	}
 	
 	@POST
-	@Path("/amenity/edit")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/edit/{id}/{name}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response editAmenity(Amenities a, @Context HttpServletRequest request) {
+	public Response edit(Amenities amenity,@PathParam("name") String name ,@PathParam("id") String id) {
+		AmenitiesDAO dao = (AmenitiesDAO) context.getAttribute("AmenitiesDAO");
 		
-		AmenitiesDAO amenities = (AmenitiesDAO) context.getAttribute("AmenitiesDAO");
 		
-		amenities.getAmenities().put(a.getName(),a);
-			
-		context.setAttribute("AmenitiesDAO", amenities);
+		dao.findById(id).setName(amenity.getName());
+		context.setAttribute("AmenitiesDAO", dao);
+		dao.saveAmenities(context.getRealPath(""), dao);
 		
-		amenities.saveAmenities(context.getRealPath(""), amenities);
-		
-		return Response.ok(a).build();
+		return Response.ok(amenity).build();
 	}
+	
 	
 	@POST
 	@Path("/amenity/delete")

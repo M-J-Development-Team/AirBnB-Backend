@@ -38,9 +38,9 @@ public class AmenitiesDAO {
 		this.amenities = amenities;
 	}
 	
-	public Amenities findById(UUID id) {
+	public Amenities findById(String id) {
 		for(Amenities a: amenities.values()) {
-			if(id.equals(a.getIdOne())) {
+			if(id.equals(a.getIdOne().toString())) {
 				return a;
 			}
 			

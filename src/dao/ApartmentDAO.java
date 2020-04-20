@@ -54,6 +54,16 @@ public class ApartmentDAO {
 		return active;
 	}
 	
+	public ArrayList<Apartment> allApartments(){
+		ArrayList<Apartment> all = new ArrayList<Apartment>();
+		
+		for(Apartment a: apartments.values()) {
+			all.add(a);
+		}
+		
+		return all;
+	}
+	
 
 	private void loadApartment(String contextPath) {
 		FileWriter fileWriter = null;

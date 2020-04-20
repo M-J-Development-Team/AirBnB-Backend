@@ -89,6 +89,55 @@ public class UserService {
 	}
 	
 	@POST
+	@Path("/logout")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public void logout(String idOne, @Context HttpServletRequest request) {
+		
+		UserDAO users = (UserDAO) context.getAttribute("UserDAO"); 		
+		
+		User user = users.findbyID(idOne);
+		user.setIdOne("");
+		
+		context.setAttribute("UserDAO", users);
+		
+		users.saveUser(context.getRealPath(""), users);
+		
+	}
+	
+
+	@GET
+	@Path("/userinfo/{idOne}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getUserData(@PathParam("idOne") String idOne,@Context HttpServletRequest request) {
+		
+		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
+		
+		User user = users.findbyID(idOne);
+			
+		if(user == null)
+		{
+			return Response.status(400).build();
+		}
+		
+		return Response.ok(user).build();	
+	}
+	
+	@GET
+	@Path("/all")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllUsers(@Context HttpServletRequest request) {
+		
+		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
+	
+		
+		return Response.ok(users).build();	
+	}
+	
+	
+	@POST
 	@Path("/addhost")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)

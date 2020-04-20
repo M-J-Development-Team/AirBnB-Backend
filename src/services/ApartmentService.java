@@ -38,7 +38,7 @@ public class ApartmentService {
 	}
 	
 	@GET
-	@Path("/all")
+	@Path("/apartments/all")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAll(@Context HttpServletRequest request) {

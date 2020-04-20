@@ -34,9 +34,9 @@ public class ApartmentDAO {
 		loadApartment(contextPath);
 	}
 	
-	public Apartment findApartmentById(UUID id) {
+	public Apartment findApartmentById(String id) {
 		for(Apartment a: apartments.values()) {
-			if(id.equals(a.getIdOne())) {
+			if(id.equals(a.getIdOne().toString())) {
 				return a;
 			}
 		}

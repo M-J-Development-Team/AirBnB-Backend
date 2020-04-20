@@ -1,5 +1,7 @@
 package services;
 
+import java.util.ArrayList;
+
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -31,9 +33,9 @@ public class ApartmentService {
 	@PostConstruct 
 	public void init() {
 		
-		if(context.getAttribute("UserDAO") == null) {
+		if(context.getAttribute("ApartmentDAO") == null) {
 			String contextPath = context.getRealPath("");
-			context.setAttribute("UserDAO", new UserDAO(contextPath));
+			context.setAttribute("ApartmentDAO", new ApartmentDAO(contextPath));
 		}
 	}
 	
@@ -44,14 +46,37 @@ public class ApartmentService {
 	public Response getAll(@Context HttpServletRequest request) {
 		
 		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
-	
+		ArrayList<Apartment> apps = dao.activeApartments();
 		
-		return Response.ok(dao).build();	
+		return Response.ok(apps).build();	
+	}
+	
+	@POST
+	@Path("/apartments/add")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response add(Apartment a, @Context HttpServletRequest request)
+	{
+		ApartmentDAO apartments = (ApartmentDAO) context.getAttribute("ApartmentDAO");
+				
+		if(apartments.getApartments().containsKey(a.getName())) {
+			return Response.status(400).build();
+		}
+		
+		a.setStatus(ApartmentStatus.ACTIVE);
+
+		apartments.getApartments().put(a.getName(), a);
+		context.setAttribute("ApartmentDAO", apartments);
+		
+		apartments.saveApartment(context.getRealPath(""), apartments);
+		
+		return Response.ok().build();
+		
 	}
 	
 	
 	@DELETE
-	@Path("/delete/{idOne}")
+	@Path("/apartments/delete/{idOne}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response delete(@PathParam("idOne") String idOne) {
 		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");

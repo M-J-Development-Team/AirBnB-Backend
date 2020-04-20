@@ -2,6 +2,7 @@ package services;
 
 import javax.ws.rs.core.MediaType;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.annotation.PostConstruct;
@@ -19,8 +20,10 @@ import javax.ws.rs.core.Response;
 
 import beans.Amenities;
 import beans.AmenityStatus;
+import beans.Apartment;
 import beans.User;
 import dao.AmenitiesDAO;
+import dao.ApartmentDAO;
 import dao.UserDAO;
 
 @Path("")
@@ -83,9 +86,21 @@ public class AmenityService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response delete(@PathParam("id") String id,@PathParam("name") String name) {
 		AmenitiesDAO dao = (AmenitiesDAO) context.getAttribute("AmenitiesDAO");
+		ApartmentDAO apDao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
 		
-		Amenities a = dao.findById(id);
-		a.setAmenityStatus(AmenityStatus.DELETED);
+		Amenities amenity = dao.findById(id);
+		
+		ArrayList<Apartment> apps = apDao.allApartments();
+		
+		for(Apartment a : apps) {
+			for(Amenities am : a.getAmenities()) {
+				if(am.equals(amenity.getName())) {
+					a.getAmenities().remove(am);
+				}
+			}
+		}
+		
+		amenity.setAmenityStatus(AmenityStatus.DELETED);
 		context.setAttribute("AmenitiesDAO", dao);
 		dao.saveAmenities(context.getRealPath(""), dao);
 		

@@ -31,6 +31,17 @@ public class ApartmentDAO {
 	
 	public ApartmentDAO(String contextPath) {
 		apartments = new HashMap<String, Apartment>();
+		
+		Apartment a = new Apartment();
+		a.setIdOne(UUID.randomUUID());
+		a.setNumberOfRooms(5);
+		a.setNumberOfGuests(6);
+		a.setPrice(300);
+		a.setStatus(ApartmentStatus.ACTIVE);
+		a.setName("Mina Apartmani");
+		//String id = a.getIdOne().toString();
+		
+		apartments.put(a.getName(), a);
 		loadApartment(contextPath);
 	}
 	
@@ -65,6 +76,19 @@ public class ApartmentDAO {
 		
 		return all;
 	}
+	
+	public ArrayList<Apartment> allActiveApartments(){
+		ArrayList<Apartment> active = new ArrayList<Apartment>();
+		
+		for(Apartment a: apartments.values()) {
+			if(a.getStatus().equals(ApartmentStatus.ACTIVE))
+			active.add(a);
+		}
+		
+		return active;
+	}
+	
+	
 	
 
 	private void loadApartment(String contextPath) {
@@ -119,7 +143,7 @@ public class ApartmentDAO {
 		
 	}
 	
-	public void saveOglas(String path, ApartmentDAO apartments) {
+	public void saveApartment(String path, ApartmentDAO apartments) {
 		
 		
 		File f = new File(path + "/apartments.txt");

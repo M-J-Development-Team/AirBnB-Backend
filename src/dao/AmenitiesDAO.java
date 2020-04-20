@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import beans.Amenities;
+import beans.AmenityStatus;
+
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,6 +52,7 @@ public class AmenitiesDAO {
 		ArrayList<Amenities> allAmenities = new ArrayList<Amenities>();
 		
 		for(Amenities a: amenities.values()) {
+			if(a.getAmenityStatus().equals(AmenityStatus.ACTIVE))
 			allAmenities.add(a);
 		}
 		return allAmenities;

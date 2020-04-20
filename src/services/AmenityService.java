@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -77,19 +78,16 @@ public class AmenityService {
 	}
 	
 	
-	@POST
-	@Path("/amenity/delete")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@DELETE
+	@Path("/delete/{id}/{name}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response deleteAmenity(Amenities a, @Context HttpServletRequest request) {
+	public Response delete(@PathParam("id") String id,@PathParam("name") String name) {
+		AmenitiesDAO dao = (AmenitiesDAO) context.getAttribute("AmenitiesDAO");
 		
-		AmenitiesDAO amenities = (AmenitiesDAO) context.getAttribute("AmenitiesDAO");
-		
+		Amenities a = dao.findById(id);
 		a.setAmenityStatus(AmenityStatus.DELETED);
-			
-		context.setAttribute("AmenitiesDAO", amenities);
-		
-		amenities.saveAmenities(context.getRealPath(""), amenities);
+		context.setAttribute("AmenitiesDAO", dao);
+		dao.saveAmenities(context.getRealPath(""), dao);
 		
 		return Response.ok().build();
 	}

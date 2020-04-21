@@ -1,6 +1,7 @@
 package services;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -130,15 +131,15 @@ public class UserService {
 	}
 	
 	@GET
-	@Path("/all")
+	@Path("/allusers")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllUsers(@Context HttpServletRequest request) {
+	public Collection<User> getAllUsers(@Context HttpServletRequest request) {
 		
 		UserDAO users = (UserDAO) context.getAttribute("UserDAO");
 	
 		
-		return Response.ok(users).build();	
+		return users.getUsers().values();
 	}
 	
 	
@@ -156,7 +157,6 @@ public class UserService {
 		}
 		
 		u.setRole(Role.HOST);
-		System.out.println(u.getIdOne().toString());
 		users.getUsers().put(u.getUsername(), u);
 		context.setAttribute("UserDAO", users);
 		

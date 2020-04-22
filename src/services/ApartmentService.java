@@ -47,6 +47,23 @@ public class ApartmentService {
 		
 		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
 		ArrayList<Apartment> apps = dao.activeApartments();
+	@GET
+	@Path("/apartments/all/{idOne}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Apartment> getAllFromHostActive(@PathParam("idOne") String idOne,@Context HttpServletRequest request) {
+		
+		System.out.println("here");
+		
+		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
+		UserDAO userdao = (UserDAO) context.getAttribute("UserDAO");
+		System.out.print("host is"+userdao.findbyID(idOne).getUsername());
+		ArrayList<Apartment> apps = dao.allActiveApartmentsFromHost(userdao.findbyID(idOne));
+	
+		
+		return dao.getApartments().values();
+	}
+	
 		
 		return Response.ok(apps).build();	
 	}

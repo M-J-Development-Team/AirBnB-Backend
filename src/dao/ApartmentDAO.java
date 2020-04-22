@@ -31,17 +31,6 @@ public class ApartmentDAO {
 	
 	public ApartmentDAO(String contextPath) {
 		apartments = new HashMap<String, Apartment>();
-		
-		Apartment a = new Apartment();
-		a.setIdOne(UUID.randomUUID());
-		a.setNumberOfRooms(5);
-		a.setNumberOfGuests(6);
-		a.setPrice(300);
-		a.setStatus(ApartmentStatus.ACTIVE);
-		a.setName("Mina Apartmani");
-		//String id = a.getIdOne().toString();
-		
-		apartments.put(a.getName(), a);
 		loadApartment(contextPath);
 	}
 	
@@ -123,7 +112,7 @@ public class ApartmentDAO {
 		BufferedReader in = null;
 		File file = null;
 		try {
-			file = new File(contextPath + "/oglasi.txt");
+			file = new File(contextPath + "/apartments.txt");
 			in = new BufferedReader(new FileReader(file));
 
 			ObjectMapper mapper = new ObjectMapper();
@@ -174,6 +163,7 @@ public class ApartmentDAO {
 		
 		
 		File f = new File(path + "/apartments.txt");
+		System.out.println(path);
 		FileWriter fileWriter = null;
 		try {
 			fileWriter = new FileWriter(f);

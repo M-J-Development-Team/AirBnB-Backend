@@ -7,15 +7,25 @@ public class Amenities {
 	UUID idOne = UUID.randomUUID();
 	private String name;
 	private AmenityStatus amenityStatus;
+	private String image;
 	
 	private Amenities() {
 		
 	}
-	public Amenities(UUID idOne, String name, AmenityStatus amenityStatus) {
+	public Amenities(String image,UUID idOne, String name, AmenityStatus amenityStatus) {
 		super();
 		this.idOne = idOne;
 		this.name = name;
 		this.amenityStatus = amenityStatus;
+		this.image = image;
+	}
+	
+	
+	public String getImage() {
+		return image;
+	}
+	public void setImage(String image) {
+		this.image = image;
 	}
 	public UUID getIdOne() {
 		return idOne;

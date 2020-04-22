@@ -120,7 +120,6 @@ public class UserService {
 		
 		User user = users.findbyID(idOne);
 		
-		System.out.println(user.getUsername());
 			
 		if(user == null)
 		{

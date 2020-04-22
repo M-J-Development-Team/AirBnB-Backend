@@ -1,19 +1,20 @@
 package beans;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 public class Reservation {
 
 	private String apartment;
-	private Date reservedFrom;
-	private Date reservedTill;
+	private String reservedFrom;
+	private String reservedTill;
 	private int numberOfNights;
 	private String message;
 	private String guest;
 	private float price;
 	private ReservationStatus reservationStatus;
 	
-	public Reservation(String apartment, Date reservedFrom, Date reservedTill, int numberOfNights, String message,
+	public Reservation(String apartment, String reservedFrom, String reservedTill, int numberOfNights, String message,
 			String guest, float price, ReservationStatus reservationStatus) {
 		super();
 		this.apartment = apartment;
@@ -34,19 +35,19 @@ public class Reservation {
 		this.apartment = apartment;
 	}
 
-	public Date getReservedFrom() {
+	public String getReservedFrom() {
 		return reservedFrom;
 	}
 
-	public void setReservedFrom(Date reservedFrom) {
+	public void setReservedFrom(String reservedFrom) {
 		this.reservedFrom = reservedFrom;
 	}
 
-	public Date getReservedTill() {
+	public String getReservedTill() {
 		return reservedTill;
 	}
 
-	public void setReservedTill(Date reservedTill) {
+	public void setReservedTill(String reservedTill) {
 		this.reservedTill = reservedTill;
 	}
 

@@ -43,10 +43,18 @@ public class ApartmentService {
 	@Path("/apartments/all")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAll(@Context HttpServletRequest request) {
+	public Collection<Apartment> getAll(@Context HttpServletRequest request) {
 		
 		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
 		ArrayList<Apartment> apps = dao.activeApartments();
+
+	
+		
+		return dao.getApartments().values();
+	}
+	
+	
+
 	@GET
 	@Path("/apartments/all/{idOne}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -82,23 +90,38 @@ public class ApartmentService {
 	}
 	
 	@POST
-	@Path("/apartments/add")
+	@Path("/apartmentsadd")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response add(Apartment a, @Context HttpServletRequest request)
 	{
+		System.out.println("in here");
 		ApartmentDAO apartments = (ApartmentDAO) context.getAttribute("ApartmentDAO");
 				
 		if(apartments.getApartments().containsKey(a.getName())) {
-			return Response.status(400).build();
+			return Response.status(401).build();
 		}
 		
 		a.setStatus(ApartmentStatus.ACTIVE);
-
+		
+		LocalDate start = LocalDate.parse(a.getDatesForRenting().get(0).getFrom());
+		LocalDate end = LocalDate.parse(a.getDatesForRenting().get(0).getTo());
+		
+		ArrayList<String> totalDates = new ArrayList<String>();
+		
+		while (!start.isAfter(end)) {
+		    totalDates.add(start.toString());
+		    start = start.plusDays(1);
+		}
+		
+		a.setFreeDates(totalDates);
+		
 		apartments.getApartments().put(a.getName(), a);
 		context.setAttribute("ApartmentDAO", apartments);
 		
 		apartments.saveApartment(context.getRealPath(""), apartments);
+		
+		System.out.println(a.getHost());
 		
 		return Response.ok().build();
 		

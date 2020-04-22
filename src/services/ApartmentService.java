@@ -64,8 +64,21 @@ public class ApartmentService {
 		return dao.getApartments().values();
 	}
 	
+	@GET
+	@Path("/apartments/deleted/all/{idOne}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Apartment> getAllFromHostDeleted(@PathParam("idOne") String idOne,@Context HttpServletRequest request) {
 		
-		return Response.ok(apps).build();	
+		System.out.println("here");
+		
+		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
+		UserDAO userdao = (UserDAO) context.getAttribute("UserDAO");
+		System.out.print("host is"+userdao.findbyID(idOne).getUsername());
+		ArrayList<Apartment> apps = dao.allDeletedApartmentsFromHost(userdao.findbyID(idOne));
+	
+		
+		return dao.getApartments().values();
 	}
 	
 	@POST

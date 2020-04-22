@@ -160,8 +160,6 @@ public class UserService {
 		users.getUsers().put(u.getUsername(), u);
 		context.setAttribute("UserDAO", users);
 		
-		
-		
 		users.saveUser(context.getRealPath(""), users);
 		
 		return Response.ok().build();

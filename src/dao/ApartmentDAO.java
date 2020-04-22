@@ -20,6 +20,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 
 import beans.Apartment;
 import beans.ApartmentStatus;
+import beans.User;
 
 public class ApartmentDAO {
 	

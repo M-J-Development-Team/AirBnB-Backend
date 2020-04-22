@@ -89,6 +89,19 @@ public class ApartmentDAO {
 	}
 	
 	
+	public ArrayList<Apartment> allActiveApartmentsFromHost(User host){
+		ArrayList<Apartment> active = new ArrayList<Apartment>();
+		
+		for(Apartment a: apartments.values()) {
+			if(a.getStatus().equals(ApartmentStatus.ACTIVE) && (a.getHost().equals(host.getUsername()))) {
+			active.add(a);
+			}
+			
+		}
+		
+		return active;
+	}
+	
 	
 
 	private void loadApartment(String contextPath) {

@@ -82,25 +82,24 @@ public class AmenityService {
 	
 	
 	@DELETE
-	@Path("/delete/{id}/{name}")
+	@Path("/amenity/delete/{name}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response delete(@PathParam("id") String id,@PathParam("name") String name) {
+	public Response delete(@PathParam("name") String name) {
 		AmenitiesDAO dao = (AmenitiesDAO) context.getAttribute("AmenitiesDAO");
 		ApartmentDAO apDao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
 		
-		Amenities amenity = dao.findById(id);
+		Amenities amenity = dao.findByName(name);
+		amenity.setAmenityStatus(AmenityStatus.DELETED);
 		
-		ArrayList<Apartment> apps = apDao.allApartments();
+		/*ArrayList<Apartment> apps = apDao.allApartments();
 		
 		for(Apartment a : apps) {
 			for(Amenities am : a.getAmenities()) {
 				if(am.equals(amenity.getName())) {
-					a.getAmenities().remove(am);
+					amenity.setAmenityStatus(AmenityStatus.DELETED);
 				}
 			}
-		}
-		
-		amenity.setAmenityStatus(AmenityStatus.DELETED);
+		}*/
 		context.setAttribute("AmenitiesDAO", dao);
 		dao.saveAmenities(context.getRealPath(""), dao);
 		

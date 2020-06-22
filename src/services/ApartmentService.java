@@ -71,7 +71,7 @@ public class ApartmentService {
 		ArrayList<Apartment> apps = dao.allActiveApartmentsFromHost(userdao.findbyID(idOne));
 	
 		
-		return dao.getApartments().values();
+		return apps;
 	}
 	
 	@GET
@@ -88,7 +88,7 @@ public class ApartmentService {
 		ArrayList<Apartment> apps = dao.allDeletedApartmentsFromHost(userdao.findbyID(idOne));
 	
 		
-		return dao.getApartments().values();
+		return apps;
 	}
 	
 	@POST

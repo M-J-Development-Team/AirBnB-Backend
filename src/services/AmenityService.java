@@ -67,13 +67,14 @@ public class AmenityService {
 	}
 	
 	@POST
-	@Path("/edit/{id}/{name}")
+	@Path("/edit/{name}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response edit(Amenities amenity,@PathParam("name") String name ,@PathParam("id") String id) {
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response edit(Amenities amenity,@PathParam("name") String name) {
+		
 		AmenitiesDAO dao = (AmenitiesDAO) context.getAttribute("AmenitiesDAO");
 		
-		
-		dao.findById(id).setName(amenity.getName());
+		dao.findByName(name).setName(amenity.getName());
 		context.setAttribute("AmenitiesDAO", dao);
 		dao.saveAmenities(context.getRealPath(""), dao);
 		

@@ -50,11 +50,7 @@ public class ApartmentService {
 	public Collection<Apartment> getAll(@Context HttpServletRequest request) {
 		
 		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
-		ArrayList<Apartment> apps = dao.activeApartments();
-
-	
-		
-		return apps;
+		return dao.getApartments().values();
 	}
 	
 

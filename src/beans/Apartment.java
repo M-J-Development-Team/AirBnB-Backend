@@ -2,6 +2,7 @@ package beans;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -16,15 +17,15 @@ public class Apartment {
 	private int numberOfRooms;
 	private int numberOfGuests;
 	private Location location;
-	private ArrayList<Date> datesForRenting =  new ArrayList<>();
-	private ArrayList<Date> freeDates = new ArrayList<>();
+	private ArrayList<RentPeriod> datesForRenting =  new ArrayList<>();
+	private ArrayList<String> freeDates = new ArrayList<>();
 	private String host;
 	private ArrayList<ApartmentComment> comments = new ArrayList<>();
-	private ArrayList<String> photoPath = new ArrayList<>();
+	private String photoPath;
 	private UUID idOne = UUID.randomUUID();
 	private float price;
-	private Time checkInTime = new Time(2);
-	private Time checkOutTime = new Time(10);
+	private String checkInTime;
+	private String checkOutTime;
 	private ApartmentStatus status;
 	private ArrayList<Amenities> amenities = new ArrayList<>();
 	private ArrayList<Reservation> reservations = new ArrayList<>();
@@ -41,9 +42,9 @@ public class Apartment {
 	
 	
 	public Apartment(ApartmentType type, int numberOfRooms, int numberOfGuests, Location location,
-			ArrayList<Date> datesForRenting, ArrayList<Date> freeDates, String host,
-			ArrayList<ApartmentComment> comments, ArrayList<String> photoPath, UUID idOne, float price, Time checkInTime,
-			Time checkOutTime, ApartmentStatus status, ArrayList<Amenities> amenities,
+			ArrayList<RentPeriod> datesForRenting, ArrayList<String> freeDates, String host,
+			ArrayList<ApartmentComment> comments, String photoPath, UUID idOne, float price, String checkInTime,
+			String checkOutTime, ApartmentStatus status, ArrayList<Amenities> amenities,
 			ArrayList<Reservation> reservations) {
 		super();
 		this.type = type;
@@ -101,19 +102,19 @@ public class Apartment {
 		this.location = location;
 	}
 
-	public ArrayList<Date> getDatesForRenting() {
+	public ArrayList<RentPeriod> getDatesForRenting() {
 		return datesForRenting;
 	}
 
-	public void setDatesForRenting(ArrayList<Date> datesForRenting) {
+	public void setDatesForRenting(ArrayList<RentPeriod> datesForRenting) {
 		this.datesForRenting = datesForRenting;
 	}
 
-	public ArrayList<Date> getFreeDates() {
+	public ArrayList<String> getFreeDates() {
 		return freeDates;
 	}
 
-	public void setFreeDates(ArrayList<Date> freeDates) {
+	public void setFreeDates(ArrayList<String> freeDates) {
 		this.freeDates = freeDates;
 	}
 
@@ -133,11 +134,11 @@ public class Apartment {
 		this.comments = comments;
 	}
 
-	public ArrayList<String> getPhotoPath() {
+	public String getPhotoPath() {
 		return photoPath;
 	}
 
-	public void setPhotoPath(ArrayList<String> photoPath) {
+	public void setPhotoPath(String photoPath) {
 		this.photoPath = photoPath;
 	}
 
@@ -157,21 +158,28 @@ public class Apartment {
 		this.price = price;
 	}
 
-	public Time getCheckInTime() {
+	
+	
+
+	public String getCheckInTime() {
 		return checkInTime;
 	}
 
-	public void setCheckInTime(Time checkInTime) {
+
+	public void setCheckInTime(String checkInTime) {
 		this.checkInTime = checkInTime;
 	}
 
-	public Time getCheckOutTime() {
+
+	public String getCheckOutTime() {
 		return checkOutTime;
 	}
 
-	public void setCheckOutTime(Time checkOutTime) {
+
+	public void setCheckOutTime(String checkOutTime) {
 		this.checkOutTime = checkOutTime;
 	}
+
 
 	public ApartmentStatus getStatus() {
 		return status;

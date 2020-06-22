@@ -2,44 +2,44 @@ package beans;
 
 public class Location {
 	
-	private float gWidth;
-	private float gHeight;
-	private Address adress;
+	private String gWidth;
+	private String gHeight;
+	private Address address;
 	
 	public Location() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Location(float gWidth, float gHeight, Address adress) {
+	public Location(String gWidth, String gHeight, Address address) {
 		super();
 		this.gWidth = gWidth;
 		this.gHeight = gHeight;
-		this.adress = adress;
+		this.address = address;
 	}
 
-	public float getgWidth() {
+	public String getgWidth() {
 		return gWidth;
 	}
 
-	public void setgWidth(float gWidth) {
+	public void setgWidth(String gWidth) {
 		this.gWidth = gWidth;
 	}
 
-	public float getgHeight() {
+	public String getgHeight() {
 		return gHeight;
 	}
 
-	public void setgHeight(float gHeight) {
+	public void setgHeight(String gHeight) {
 		this.gHeight = gHeight;
 	}
 
-	public Address getAdress() {
-		return adress;
+	public Address getAddress() {
+		return address;
 	}
 
-	public void setAdress(Address adress) {
-		this.adress = adress;
+	public void setAddress(Address adress) {
+		this.address = adress;
 	}
 
 	

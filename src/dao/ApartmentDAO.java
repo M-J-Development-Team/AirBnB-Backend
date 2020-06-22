@@ -20,6 +20,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 
 import beans.Apartment;
 import beans.ApartmentStatus;
+import beans.User;
 
 public class ApartmentDAO {
 	
@@ -31,17 +32,6 @@ public class ApartmentDAO {
 	
 	public ApartmentDAO(String contextPath) {
 		apartments = new HashMap<String, Apartment>();
-		
-		Apartment a = new Apartment();
-		a.setIdOne(UUID.randomUUID());
-		a.setNumberOfRooms(5);
-		a.setNumberOfGuests(6);
-		a.setPrice(300);
-		a.setStatus(ApartmentStatus.ACTIVE);
-		a.setName("Mina Apartmani");
-		//String id = a.getIdOne().toString();
-		
-		apartments.put(a.getName(), a);
 		loadApartment(contextPath);
 	}
 	
@@ -89,14 +79,41 @@ public class ApartmentDAO {
 	}
 	
 	
+	public ArrayList<Apartment> allActiveApartmentsFromHost(User host){
+		ArrayList<Apartment> active = new ArrayList<Apartment>();
+		
+		for(Apartment a: apartments.values()) {
+			if(a.getStatus().equals(ApartmentStatus.ACTIVE) && (a.getHost().equals(host.getUsername()))) {
+			active.add(a);
+			}
+			
+		}
+		
+		return active;
+	}
+	
+	
+	public ArrayList<Apartment> allDeletedApartmentsFromHost(User host){
+		ArrayList<Apartment> active = new ArrayList<Apartment>();
+		
+		for(Apartment a: apartments.values()) {
+			if(a.getStatus().equals(ApartmentStatus.DELETED) && (a.getHost().equals(host.getUsername()))) {
+			active.add(a);
+			}
+			
+		}
+		
+		return active;
+	}
 	
 
+	@SuppressWarnings("unchecked")
 	private void loadApartment(String contextPath) {
 		FileWriter fileWriter = null;
 		BufferedReader in = null;
 		File file = null;
 		try {
-			file = new File(contextPath + "/oglasi.txt");
+			file = new File(contextPath + "/apartments.txt");
 			in = new BufferedReader(new FileReader(file));
 
 			ObjectMapper mapper = new ObjectMapper();
@@ -147,6 +164,7 @@ public class ApartmentDAO {
 		
 		
 		File f = new File(path + "/apartments.txt");
+		System.out.println(path);
 		FileWriter fileWriter = null;
 		try {
 			fileWriter = new FileWriter(f);

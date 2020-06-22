@@ -22,6 +22,8 @@ import beans.Amenities;
 import beans.AmenityStatus;
 import beans.Apartment;
 import beans.ApartmentStatus;
+import beans.Reservation;
+import beans.ReservationStatus;
 import dao.AmenitiesDAO;
 import dao.ApartmentDAO;
 import dao.UserDAO;
@@ -52,9 +54,8 @@ public class ApartmentService {
 
 	
 		
-		return dao.getApartments().values();
+		return apps;
 	}
-	
 	
 
 	@GET
@@ -131,12 +132,17 @@ public class ApartmentService {
 	
 	
 	@DELETE
-	@Path("/apartments/delete/{idOne}")
+	@Path("/apartments/delete/{name}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response delete(@PathParam("idOne") String idOne) {
+	public Response delete(@PathParam("name") String name) {
 		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
 		
-		Apartment ap = dao.findApartmentById(idOne);
+		Apartment ap = dao.findApartmentByName(name);
+		
+		for(Reservation r : ap.getReservations()) {
+			r.setReservationStatus(ReservationStatus.CANCLED);
+		}
+		
 		ap.setStatus(ApartmentStatus.DELETED);
 		
 		context.setAttribute("ApartmentDAO", dao);

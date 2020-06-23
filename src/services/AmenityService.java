@@ -67,16 +67,19 @@ public class AmenityService {
 	}
 	
 	@POST
-	@Path("/edit/{name}")
+	@Path("/edit")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response edit(Amenities amenity,@PathParam("name") String name) {
+	public Response edit(Amenities amenity) {
 		
 		AmenitiesDAO dao = (AmenitiesDAO) context.getAttribute("AmenitiesDAO");
 		
-		dao.findByName(name).setName(amenity.getName());
-		context.setAttribute("AmenitiesDAO", dao);
-		dao.saveAmenities(context.getRealPath(""), dao);
+		Amenities a = dao.findById(amenity.getIdOne().toString());
+		if(a != null) {
+			if(!amenity.getName().equals(a.getName())) {
+				a.setName(amenity.getName());
+			}
+		}
 		
 		return Response.ok(amenity).build();
 	}
@@ -92,15 +95,18 @@ public class AmenityService {
 		Amenities amenity = dao.findByName(name);
 		amenity.setAmenityStatus(AmenityStatus.DELETED);
 		
-		/*ArrayList<Apartment> apps = apDao.allApartments();
+		ArrayList<Apartment> apps = apDao.allApartments();
 		
-		for(Apartment a : apps) {
-			for(Amenities am : a.getAmenities()) {
-				if(am.equals(amenity.getName())) {
-					amenity.setAmenityStatus(AmenityStatus.DELETED);
+		if(apps != null) {
+			for(Apartment a : apps) {
+				for(Amenities am : a.getAmenities()) {
+					if(am.equals(amenity.getName())) {
+						a.getAmenities().remove(am);
+					}
 				}
 			}
-		}*/
+		}
+		
 		context.setAttribute("AmenitiesDAO", dao);
 		dao.saveAmenities(context.getRealPath(""), dao);
 		

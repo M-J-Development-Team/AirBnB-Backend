@@ -115,6 +115,18 @@ public class ReservationDAO {
 		return all;
 	}
 	
+	public ArrayList<Reservation> allMyReservations(String username) {
+		ArrayList<Reservation> myReservations = new ArrayList<Reservation>();
+		
+		for(Reservation r : reservations.values()) {
+			if(r.getGuest().equals(username)) {
+				myReservations.add(r);
+			}
+		}
+		
+		return myReservations;
+	}
+
 	
 	@SuppressWarnings("unchecked")
 	private void loadReservation(String contextPath) {

@@ -1,5 +1,6 @@
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.annotation.PostConstruct;
@@ -8,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -16,6 +18,7 @@ import beans.Apartment;
 import beans.Reservation;
 import dao.ApartmentDAO;
 import dao.ReservationDAO;
+import dao.UserDAO;
 
 public class ReservationService {
 
@@ -89,6 +92,17 @@ public class ReservationService {
 		
 		ReservationDAO dao = (ReservationDAO) context.getAttribute("ReservationDAO");
 		return dao.acceptedReservations();
+	}
+	
+	@GET
+	@Path("/reservations/all/{usernmae}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Reservation> getAllMyReservations(@PathParam("username") String username,@Context HttpServletRequest request) {
+		ReservationDAO dao = (ReservationDAO) context.getAttribute("ReservationDAO");
+		UserDAO userDao = (UserDAO) context.getAttribute("UserDAO");
+	
+		return dao.allMyReservations(username);
 	}
 	
 	

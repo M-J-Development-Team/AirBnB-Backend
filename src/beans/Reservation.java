@@ -2,6 +2,7 @@ package beans;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.UUID;
 
 public class Reservation {
 
@@ -12,6 +13,7 @@ public class Reservation {
 	private String message;
 	private String guest;
 	private float price;
+	private UUID idOne = UUID.randomUUID();
 	private ReservationStatus reservationStatus;
 	
 	public Reservation(String apartment, String reservedFrom, String reservedTill, int numberOfNights, String message,
@@ -90,6 +92,16 @@ public class Reservation {
 	public void setReservationStatus(ReservationStatus reservationStatus) {
 		this.reservationStatus = reservationStatus;
 	}
+
+	public UUID getIdOne() {
+		return idOne;
+	}
+
+	public void setIdOne(UUID idOne) {
+		this.idOne = idOne;
+	}
+	
+	
 	
 	
 	

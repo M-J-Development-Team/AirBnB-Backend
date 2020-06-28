@@ -105,6 +105,16 @@ public class ReservationDAO {
 		return completed;
 	}
 	
+	public ArrayList<Reservation> allReservations() {
+		ArrayList<Reservation> all = new ArrayList<Reservation>();
+		
+		for(Reservation r : all) {
+				all.add(r);
+		}
+		
+		return all;
+	}
+	
 	
 	@SuppressWarnings("unchecked")
 	private void loadReservation(String contextPath) {

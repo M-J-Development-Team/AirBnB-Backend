@@ -1,5 +1,7 @@
 package services;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -8,14 +10,18 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import beans.Apartment;
+import beans.ApartmentStatus;
 import beans.Reservation;
+import beans.ReservationStatus;
 import dao.ApartmentDAO;
 import dao.ReservationDAO;
 import dao.UserDAO;
@@ -100,9 +106,37 @@ public class ReservationService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<Reservation> getAllMyReservations(@PathParam("username") String username,@Context HttpServletRequest request) {
 		ReservationDAO dao = (ReservationDAO) context.getAttribute("ReservationDAO");
-		UserDAO userDao = (UserDAO) context.getAttribute("UserDAO");
 	
 		return dao.allMyReservations(username);
+	}
+	
+	@POST
+	@Path("/reservations/save")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response add(Reservation r, @Context HttpServletRequest request)
+	{
+		ReservationDAO dao = (ReservationDAO) context.getAttribute("ReservationDAO");
+		
+		r.setReservationStatus(ReservationStatus.CREATED);
+		
+		long nights = Duration.between(LocalDate.parse(r.getReservedFrom()), LocalDate.parse(r.getReservedTill())).toDays();
+		int intValue = (int) nights;
+		
+		r.setNumberOfNights(intValue);
+		
+		ApartmentDAO apartments = (ApartmentDAO) context.getAttribute("ApartmentDAO");
+		
+		Apartment a = apartments.findApartmentByName(r.getApartment());
+		r.setPrice(a.getPrice()*intValue);
+		
+		dao.getReservations().put(r.getIdOne().toString(), r);
+		context.setAttribute("ReservationDAO", dao);
+		
+		dao.saveReservation(context.getRealPath(""), dao);
+		
+		return Response.ok().build();
+		
 	}
 	
 	

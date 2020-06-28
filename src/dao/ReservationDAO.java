@@ -43,6 +43,68 @@ public class ReservationDAO {
 		return null;
 	}
 	
+
+	
+	public ArrayList<Reservation> createdReservations() {
+		ArrayList<Reservation> created = new ArrayList<Reservation>();
+		
+		for(Reservation r : created) {
+			if(r.getReservationStatus().equals(ReservationStatus.CREATED)) {
+				created.add(r);
+			}
+		}
+		
+		return created;
+	}
+	
+	public ArrayList<Reservation> deniedReservations() {
+		ArrayList<Reservation> denied = new ArrayList<Reservation>();
+		
+		for(Reservation r : denied) {
+			if(r.getReservationStatus().equals(ReservationStatus.DENIED)) {
+				denied.add(r);
+			}
+		}
+		
+		return denied;
+	}
+	
+	public ArrayList<Reservation> cancelledReservations() {
+		ArrayList<Reservation> cancelled = new ArrayList<Reservation>();
+		
+		for(Reservation r : cancelled) {
+			if(r.getReservationStatus().equals(ReservationStatus.CANCLED)) {
+				cancelled.add(r);
+			}
+		}
+		
+		return cancelled;
+	}
+	
+	public ArrayList<Reservation> acceptedReservations() {
+		ArrayList<Reservation> accepted = new ArrayList<Reservation>();
+		
+		for(Reservation r : accepted) {
+			if(r.getReservationStatus().equals(ReservationStatus.ACCEPTED)) {
+				accepted.add(r);
+			}
+		}
+		
+		return accepted;
+	}
+	
+	public ArrayList<Reservation> completedReservations() {
+		ArrayList<Reservation> completed = new ArrayList<Reservation>();
+		
+		for(Reservation r : completed) {
+			if(r.getReservationStatus().equals(ReservationStatus.COMPLETED)) {
+				completed.add(r);
+			}
+		}
+		
+		return completed;
+	}
+	
 	
 	@SuppressWarnings("unchecked")
 	private void loadReservation(String contextPath) {

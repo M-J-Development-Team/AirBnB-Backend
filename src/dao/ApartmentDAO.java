@@ -93,12 +93,13 @@ public class ApartmentDAO {
 	}
 	
 	
-	public ArrayList<Apartment> allDeletedApartmentsFromHost(User host){
+	public ArrayList<Apartment> allInactiveApartmentsFromHost(User host){
 		ArrayList<Apartment> active = new ArrayList<Apartment>();
 		
 		for(Apartment a: apartments.values()) {
-			if(a.getStatus().equals(ApartmentStatus.DELETED) && (a.getHost().equals(host.getUsername()))) {
+			if(a.getStatus().equals(ApartmentStatus.INACTIVE) && (a.getHost().equals(host.getUsername()))) {
 			active.add(a);
+			
 			}
 			
 		}

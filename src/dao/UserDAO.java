@@ -171,6 +171,7 @@ public class UserDAO {
 			
 			
 			File f = new File(path + "/users.txt");
+			System.out.println(path);
 			FileWriter fileWriter = null;
 			try {
 				fileWriter = new FileWriter(f);

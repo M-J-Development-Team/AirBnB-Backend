@@ -117,6 +117,22 @@ public class AmenityService {
 		return amenities.getAllAmenities();
 	}
 	
+	@GET
+	@Path("/amenity/avaliable/{idOne}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Amenities> allAvaliableForApartment(@PathParam("idOne") String idOne,@Context HttpServletRequest request) {
+		
+		AmenitiesDAO amenities = (AmenitiesDAO) context.getAttribute("AmenitiesDAO");
+		ApartmentDAO daoAp = (ApartmentDAO) context.getAttribute("ApartmentDAO");
+		
+		//amenities.findAmenitiesForApartment(daoAp.findApartmentById(idOne));
+		
+		return amenities.findAmenitiesForApartment(daoAp.findApartmentById(idOne));
+	}
+	
+	
+	
 
 
 }

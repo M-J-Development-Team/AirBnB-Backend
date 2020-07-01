@@ -215,6 +215,13 @@ public class Apartment {
 		this.name = name;
 	}
 	
+	public void addNewRentDates(String from,String to) {
+		RentPeriod rentPeriod = new RentPeriod();
+		rentPeriod.setFrom(from);
+		rentPeriod.setTo(to);
+		this.datesForRenting.add(rentPeriod);
+	}
+	
 	
 	
 	

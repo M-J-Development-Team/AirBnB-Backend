@@ -7,11 +7,14 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import beans.Amenities;
 import beans.AmenityStatus;
+import beans.Apartment;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -67,8 +70,34 @@ public class AmenitiesDAO {
 		
 		return null;
 	}
-
-
+	
+	public Collection<Amenities> findAmenitiesForApartment(Apartment a) {
+		
+		List<Amenities> returnlist =  new ArrayList<Amenities>();
+		
+		
+		for(Amenities amenity : amenities.values()) {
+			
+			boolean contains = false;
+			
+			for(Amenities apartmentAmenity : a.getAmenities()) {
+				if(amenity.getIdOne().equals(apartmentAmenity.getIdOne())) {
+					contains = true;
+				}else {
+					contains = false;
+				}
+			}
+			
+			if(contains ==  false) {
+				returnlist.add(amenity);
+				System.out.println(amenity.getName());
+			}
+		
+	}
+		
+		return returnlist;
+	
+	}
 
 	public AmenitiesDAO(String contextPath) {
 		amenities = new HashMap<String, Amenities>();

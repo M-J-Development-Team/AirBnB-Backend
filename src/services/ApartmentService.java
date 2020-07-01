@@ -3,6 +3,7 @@ package services;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
@@ -22,6 +23,7 @@ import beans.Amenities;
 import beans.AmenityStatus;
 import beans.Apartment;
 import beans.ApartmentStatus;
+import beans.RentPeriod;
 import dao.AmenitiesDAO;
 import dao.ApartmentDAO;
 import dao.UserDAO;
@@ -48,47 +50,77 @@ public class ApartmentService {
 	public Collection<Apartment> getAll(@Context HttpServletRequest request) {
 		
 		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
-		ArrayList<Apartment> apps = dao.activeApartments();
-
-	
-		
+			
 		return dao.getApartments().values();
 	}
 	
+	@GET
+	@Path("/apartments/{idOne}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getOne(@PathParam("idOne") String idOne,@Context HttpServletRequest request) {
+		
+		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
+		Apartment a = dao.findApartmentById(idOne);
+		return Response.ok(a).build();
+	}
+	
+	@POST
+	@Path("/apartments/adddate/{idOne}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addDates(RentPeriod rp,@PathParam("idOne") String idOne,@Context HttpServletRequest request) {
+		
+		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
+		dao.findApartmentById(idOne).addNewRentDates(rp.from, rp.to);
+		
+		
+		dao.getApartments().put(dao.findApartmentById(idOne).getName(), dao.findApartmentById(idOne));
+		context.setAttribute("ApartmentDAO", dao);
+		
+		dao.saveApartment(context.getRealPath(""), dao);
+		
+		return Response.ok(rp).build();
+	}
 	
 
+	
+	
 	@GET
 	@Path("/apartments/all/{idOne}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<Apartment> getAllFromHostActive(@PathParam("idOne") String idOne,@Context HttpServletRequest request) {
 		
-		System.out.println("here");
+		System.out.println("in active");
 		
 		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
 		UserDAO userdao = (UserDAO) context.getAttribute("UserDAO");
-		System.out.print("host is"+userdao.findbyID(idOne).getUsername());
+		
 		ArrayList<Apartment> apps = dao.allActiveApartmentsFromHost(userdao.findbyID(idOne));
 	
 		
-		return dao.getApartments().values();
+		return apps;
 	}
 	
 	@GET
-	@Path("/apartments/deleted/all/{idOne}")
+	@Path("/apartments/inactive/all/{idOne}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<Apartment> getAllFromHostDeleted(@PathParam("idOne") String idOne,@Context HttpServletRequest request) {
+	public Collection<Apartment> getAllFromHostInactive(@PathParam("idOne") String idOne,@Context HttpServletRequest request) {
 		
-		System.out.println("here");
+		System.out.println("in deleted");
 		
 		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
 		UserDAO userdao = (UserDAO) context.getAttribute("UserDAO");
-		System.out.print("host is"+userdao.findbyID(idOne).getUsername());
-		ArrayList<Apartment> apps = dao.allDeletedApartmentsFromHost(userdao.findbyID(idOne));
 	
+		ArrayList<Apartment> apps = dao.allInactiveApartmentsFromHost(userdao.findbyID(idOne));
 		
-		return dao.getApartments().values();
+		for(Apartment a : apps) {
+			System.out.println(a.getName()+" "+a.getStatus());
+		}
+		
+		return apps;
 	}
 	
 	@POST
@@ -98,6 +130,7 @@ public class ApartmentService {
 	public Response add(Apartment a, @Context HttpServletRequest request)
 	{
 		System.out.println("in here");
+		a.setIdOne(UUID.randomUUID());
 		ApartmentDAO apartments = (ApartmentDAO) context.getAttribute("ApartmentDAO");
 				
 		if(apartments.getApartments().containsKey(a.getName())) {

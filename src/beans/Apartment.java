@@ -19,6 +19,7 @@ public class Apartment {
 	private Location location;
 	private ArrayList<RentPeriod> datesForRenting =  new ArrayList<>();
 	private ArrayList<String> freeDates = new ArrayList<>();
+	private ArrayList<String> rentedDates = new ArrayList<String>();
 	private String host;
 	private ArrayList<ApartmentComment> comments = new ArrayList<>();
 	private String photoPath;
@@ -28,7 +29,7 @@ public class Apartment {
 	private String checkOutTime;
 	private ApartmentStatus status;
 	private ArrayList<Amenities> amenities = new ArrayList<>();
-	private ArrayList<Reservation> reservations = new ArrayList<>();
+	private ArrayList<String> reservations = new ArrayList<>();
 	private String name;
 	
 	@PostConstruct
@@ -45,7 +46,7 @@ public class Apartment {
 			ArrayList<RentPeriod> datesForRenting, ArrayList<String> freeDates, String host,
 			ArrayList<ApartmentComment> comments, String photoPath, UUID idOne, float price, String checkInTime,
 			String checkOutTime, ApartmentStatus status, ArrayList<Amenities> amenities,
-			ArrayList<Reservation> reservations) {
+			ArrayList<String> reservations, ArrayList<String> rentedDates) {
 		super();
 		this.type = type;
 		this.numberOfRooms = numberOfRooms;
@@ -63,6 +64,7 @@ public class Apartment {
 		this.status = status;
 		this.amenities = amenities;
 		this.reservations = reservations;
+		this.rentedDates = rentedDates;
 	}
 	
 	public Apartment() {
@@ -197,11 +199,11 @@ public class Apartment {
 		this.amenities = amenities;
 	}
 
-	public ArrayList<Reservation> getReservations() {
+	public ArrayList<String> getReservations() {
 		return reservations;
 	}
 
-	public void setReservations(ArrayList<Reservation> reservations) {
+	public void setReservations(ArrayList<String> reservations) {
 		this.reservations = reservations;
 	}
 
@@ -214,6 +216,18 @@ public class Apartment {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+
+	public ArrayList<String> getRentedDates() {
+		return rentedDates;
+	}
+
+
+	public void setRentedDates(ArrayList<String> rentedDates) {
+		this.rentedDates = rentedDates;
+	}
+	
+	
 	
 	
 	

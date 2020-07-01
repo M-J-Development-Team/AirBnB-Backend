@@ -27,6 +27,7 @@ import beans.Reservation;
 import beans.ReservationStatus;
 import dao.AmenitiesDAO;
 import dao.ApartmentDAO;
+import dao.ReservationDAO;
 import dao.UserDAO;
 
 @Path("")
@@ -155,9 +156,11 @@ public class ApartmentService {
 		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
 		
 		Apartment ap = dao.findApartmentByName(name);
+		ReservationDAO resdDao = (ReservationDAO) context.getAttribute("ReservationDAO");
 		
-		for(Reservation r : ap.getReservations()) {
-			r.setReservationStatus(ReservationStatus.CANCLED);
+		for(String r : ap.getReservations()) {
+			Reservation reservation = resdDao.findReservationById(r);
+			reservation.setReservationStatus(ReservationStatus.CANCLED);
 		}
 		
 		ap.setStatus(ApartmentStatus.DELETED);

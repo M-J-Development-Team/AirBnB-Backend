@@ -2,8 +2,10 @@ package services;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
@@ -22,10 +24,12 @@ import beans.Apartment;
 import beans.ApartmentStatus;
 import beans.Reservation;
 import beans.ReservationStatus;
+import beans.User;
 import dao.ApartmentDAO;
 import dao.ReservationDAO;
 import dao.UserDAO;
 
+@Path("")
 public class ReservationService {
 
 	@Context
@@ -120,8 +124,8 @@ public class ReservationService {
 		
 		r.setReservationStatus(ReservationStatus.CREATED);
 		
-		long nights = Duration.between(LocalDate.parse(r.getReservedFrom()), LocalDate.parse(r.getReservedTill())).toDays();
-		int intValue = (int) nights;
+		long n =  ChronoUnit.DAYS.between(LocalDate.parse(r.getReservedFrom()), LocalDate.parse(r.getReservedTill()));
+		int intValue = (int) n;
 		
 		r.setNumberOfNights(intValue);
 		
@@ -130,13 +134,62 @@ public class ReservationService {
 		Apartment a = apartments.findApartmentByName(r.getApartment());
 		r.setPrice(a.getPrice()*intValue);
 		
+		UserDAO userdao = (UserDAO) context.getAttribute("UserDAO");
+		User user = userdao.findUserByUsername(r.getGuest());
+		
+		
 		dao.getReservations().put(r.getIdOne().toString(), r);
 		context.setAttribute("ReservationDAO", dao);
 		
+		LocalDate start = LocalDate.parse(r.getReservedFrom());
+		LocalDate end = LocalDate.parse(r.getReservedTill());
+		
+		ArrayList<String> totalDates = new ArrayList<String>();
+		
+		while (!start.isAfter(end)) {
+		    totalDates.add(start.toString());
+		    start = start.plusDays(1);
+		}
+		
+		a.setRentedDates(totalDates);
+		r.setRentedDates(totalDates);
+		for(String date : totalDates) {
+			a.getFreeDates().remove(date);
+		}
+		
 		dao.saveReservation(context.getRealPath(""), dao);
+		a.getReservations().add(r.getIdOne().toString());
+		user.getReservations().add(r.getIdOne().toString());
+		apartments.saveApartment(context.getRealPath(""), apartments);
+		userdao.saveUser(context.getRealPath(""), userdao);
 		
 		return Response.ok().build();
 		
+	}
+	
+	@POST
+	@Path("/reservations/cancel/{idOne}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response cancel(@PathParam("idOne") String idOne, @Context HttpServletRequest request)
+	{
+		ReservationDAO dao = (ReservationDAO) context.getAttribute("ReservationDAO");
+		ApartmentDAO apartments = (ApartmentDAO) context.getAttribute("ApartmentDAO");
+		
+		Reservation r = dao.findReservationById(UUID.fromString(idOne));
+		Apartment a = apartments.findApartmentByName(r.getApartment());
+		
+		for(String date : r.getRentedDates()) {
+			a.getRentedDates().remove(date);
+			a.getFreeDates().add(date);
+		}
+		
+		r.setReservationStatus(ReservationStatus.CANCLED);
+		
+		dao.saveReservation(context.getRealPath(""), dao);
+		apartments.saveApartment(context.getRealPath(""), apartments);
+		
+		return Response.ok().build();
 	}
 	
 	

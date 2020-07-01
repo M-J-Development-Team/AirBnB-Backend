@@ -18,9 +18,12 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.core.JsonGenerator;
 
+import beans.Amenities;
 import beans.Apartment;
 import beans.ApartmentStatus;
+import beans.ApartmentType;
 import beans.User;
+import jdk.management.resource.internal.ApproverGroup;
 
 public class ApartmentDAO {
 	
@@ -39,6 +42,17 @@ public class ApartmentDAO {
 		for(Apartment a: apartments.values()) {
 			if(a.getStatus().equals(ApartmentStatus.ACTIVE)) {
 				if(id.equals(a.getIdOne().toString())) {
+					return a;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public Apartment findApartmentByName(String name) {
+		for(Apartment a: apartments.values()) {
+			if(a.getStatus().equals(ApartmentStatus.ACTIVE)) {
+				if(name.equals(a.getName())) {
 					return a;
 				}
 			}
@@ -105,6 +119,15 @@ public class ApartmentDAO {
 		}
 		
 		return active;
+	}
+	
+	public Apartment findById(String id) {
+		for(Apartment a: apartments.values()) {
+			if(id.equals(a.getIdOne().toString())) {
+				return a;
+			}
+		}
+		return null;
 	}
 	
 

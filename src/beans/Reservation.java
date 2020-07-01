@@ -2,6 +2,7 @@ package beans;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class Reservation {
@@ -15,7 +16,14 @@ public class Reservation {
 	private float price;
 	private UUID idOne = UUID.randomUUID();
 	private ReservationStatus reservationStatus;
+	private ArrayList<String> rentedDates = new ArrayList<String>();
 	
+	
+	
+	public Reservation() {
+		super();
+	}
+
 	public Reservation(String apartment, String reservedFrom, String reservedTill, int numberOfNights, String message,
 			String guest, float price, ReservationStatus reservationStatus) {
 		super();
@@ -100,10 +108,12 @@ public class Reservation {
 	public void setIdOne(UUID idOne) {
 		this.idOne = idOne;
 	}
-	
-	
-	
-	
-	
-	
+
+	public ArrayList<String> getRentedDates() {
+		return rentedDates;
+	}
+
+	public void setRentedDates(ArrayList<String> rentedDates) {
+		this.rentedDates = rentedDates;
+	}
 }

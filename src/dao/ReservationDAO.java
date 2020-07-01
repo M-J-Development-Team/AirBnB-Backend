@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -33,7 +34,7 @@ public class ReservationDAO {
 		
 	}
 	
-	public Reservation findReservationById(String id) {
+	public Reservation findReservationById(UUID id) {
 		for(Reservation r : reservations.values()) {
 			if(id.equals(r.getIdOne())) {
 				return r;

@@ -106,7 +106,7 @@ public class ReservationService {
 	}
 	
 	@GET
-	@Path("/reservations/all/{usernmae}")
+	@Path("/reservations/all/{username}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<Reservation> getAllMyReservations(@PathParam("username") String username,@Context HttpServletRequest request) {

@@ -38,7 +38,12 @@ public class UserDAO {
 		
 		
 		User admin = new User("admin","admin","Admin","Admin",Gender.FEMALE,Role.ADMIN,null,null);
+		User mina = new User("mina", "admin", "mina", "maras", Gender.FEMALE, Role.GUEST, null, new ArrayList<String>());
+		User marina = new User("marina", "admin", "marina", "maras", Gender.FEMALE, Role.HOST, null, new ArrayList<String>());
+		
 		users.put("admin", admin);
+		users.put("mina", mina);
+		users.put("marina", marina);
 		
 		
 	}

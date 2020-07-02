@@ -23,7 +23,7 @@ import beans.Apartment;
 import beans.ApartmentStatus;
 import beans.ApartmentType;
 import beans.User;
-import jdk.management.resource.internal.ApproverGroup;
+
 
 public class ApartmentDAO {
 	
@@ -216,6 +216,17 @@ public class ApartmentDAO {
 	public HashMap<String, Apartment> getApartments() {
 		return apartments;
 	}
+	
+	public ArrayList<Apartment> getAllActiveApartments() {
+		ArrayList<Apartment> returnlist = new ArrayList<>();
+		for(Apartment a: apartments.values()) {
+			if(a.getStatus().equals(ApartmentStatus.ACTIVE)) {
+				returnlist.add(a);
+			}
+		}
+		return returnlist;
+	}
+
 
 	public void setApartments(HashMap<String, Apartment> apartments) {
 		this.apartments = apartments;

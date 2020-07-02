@@ -55,6 +55,17 @@ public class ApartmentService {
 
 		return dao.getApartments().values();
 	}
+	
+	@GET
+	@Path("/apartments/all-active")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Apartment> getAllActive(@Context HttpServletRequest request) {
+
+		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
+
+		return dao.getAllActiveApartments();
+	}
 
 	@GET
 	@Path("/apartments/{idOne}")
@@ -159,22 +170,26 @@ public class ApartmentService {
 		apartments.saveApartment(context.getRealPath(""), apartments);
 
 		System.out.println(a.getHost());
+		
+		System.out.println(a);
 
-		return Response.ok().build();
+		return Response.ok(a).build();
 
 	}
 
 
 	@DELETE
-	@Path("/apartments/delete/{name}")
+	@Path("/apartments/delete/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response delete(@PathParam("name") String name) {
+	public Response delete(@PathParam("id") String id) {
 		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
 
-		Apartment ap = dao.findApartmentByName(name);
-
-		for(Reservation r : ap.getReservations()) {
-			r.setReservationStatus(ReservationStatus.CANCLED);
+		Apartment ap = dao.findById(id);
+		
+		if(ap.getReservations().size() != 0) {
+			for(Reservation r : ap.getReservations()) {
+				r.setReservationStatus(ReservationStatus.CANCLED);
+			}
 		}
 
 		ap.setStatus(ApartmentStatus.DELETED);

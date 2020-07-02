@@ -9,7 +9,6 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
 
 public class Apartment {
 	

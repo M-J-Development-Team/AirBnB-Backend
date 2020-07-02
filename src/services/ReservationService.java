@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -178,11 +179,14 @@ public class ReservationService {
 		
 		Reservation r = dao.findReservationById(UUID.fromString(idOne));
 		Apartment a = apartments.findApartmentByName(r.getApartment());
+		List<String> toRemove = new ArrayList<String>();
 		
 		for(String date : r.getRentedDates()) {
-			a.getRentedDates().remove(date);
-			a.getFreeDates().add(date);
+			toRemove.add(date);
 		}
+		
+		a.getRentedDates().removeAll(toRemove);
+		a.getFreeDates().addAll(toRemove);
 		
 		r.setReservationStatus(ReservationStatus.CANCLED);
 		

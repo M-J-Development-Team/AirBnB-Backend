@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
@@ -159,7 +160,7 @@ public class ApartmentService {
 		ReservationDAO resdDao = (ReservationDAO) context.getAttribute("ReservationDAO");
 		
 		for(String r : ap.getReservations()) {
-			Reservation reservation = resdDao.findReservationById(r);
+			Reservation reservation = resdDao.findReservationById(UUID.fromString(r));
 			reservation.setReservationStatus(ReservationStatus.CANCLED);
 		}
 		

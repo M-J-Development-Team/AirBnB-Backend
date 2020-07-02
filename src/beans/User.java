@@ -15,10 +15,10 @@ public class User {
 	
 	private ArrayList<Apartment> apartmentsToRent = new ArrayList<Apartment>();
 	private ArrayList<Apartment> rentedApartments = new ArrayList<Apartment>();
-	private ArrayList<Reservation> reservations = new ArrayList<Reservation>();
+	private ArrayList<String> reservations = new ArrayList<String>();
 	
 	public User(String username, String password, String name, String lastname, Gender gender, Role role,
-			ArrayList<Apartment> apartments, ArrayList<Reservation> reservations) {
+			ArrayList<Apartment> apartments, ArrayList<String> reservations) {
 		super();
 		this.username = username;
 		this.password = password;
@@ -106,11 +106,11 @@ public class User {
 		this.rentedApartments = rentedApartments;
 	}
 
-	public ArrayList<Reservation> getReservations() {
+	public ArrayList<String> getReservations() {
 		return reservations;
 	}
 
-	public void setReservations(ArrayList<Reservation> reservations) {
+	public void setReservations(ArrayList<String> reservations) {
 		this.reservations = reservations;
 	}
 

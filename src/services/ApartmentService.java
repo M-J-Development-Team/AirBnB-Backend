@@ -3,6 +3,8 @@ package services;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
@@ -26,6 +28,7 @@ import beans.Reservation;
 import beans.ReservationStatus;
 import dao.AmenitiesDAO;
 import dao.ApartmentDAO;
+import dao.ReservationDAO;
 import dao.UserDAO;
 
 @Path("")
@@ -51,6 +54,16 @@ public class ApartmentService {
 		
 		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
 		return dao.getApartments().values();
+	}
+	
+	@GET
+	@Path("/apartments/allActive")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Apartment> getAllActive(@Context HttpServletRequest request) {
+		
+		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
+		return dao.allActiveApartments();
 	}
 	
 
@@ -86,6 +99,16 @@ public class ApartmentService {
 	
 		
 		return apps;
+	}
+	
+	@GET
+	@Path("/apartments/freedates/{name}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<String> getFreeDates(@PathParam("name") String name, @Context HttpServletRequest request) {
+		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
+		Apartment app = dao.findApartmentByName(name);
+		return app.getFreeDates();
 	}
 	
 	@POST
@@ -134,9 +157,11 @@ public class ApartmentService {
 		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
 		
 		Apartment ap = dao.findApartmentByName(name);
+		ReservationDAO resdDao = (ReservationDAO) context.getAttribute("ReservationDAO");
 		
-		for(Reservation r : ap.getReservations()) {
-			r.setReservationStatus(ReservationStatus.CANCLED);
+		for(String r : ap.getReservations()) {
+			Reservation reservation = resdDao.findReservationById(UUID.fromString(r));
+			reservation.setReservationStatus(ReservationStatus.CANCLED);
 		}
 		
 		ap.setStatus(ApartmentStatus.DELETED);

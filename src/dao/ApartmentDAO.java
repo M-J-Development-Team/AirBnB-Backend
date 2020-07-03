@@ -129,6 +129,15 @@ public class ApartmentDAO {
 		}
 		return null;
 	}
+		
+	public Apartment findByUUID(UUID id) {
+		for(Apartment a: apartments.values()) {
+			if(id.equals(a.getIdOne())) {
+				return a;
+			}
+		}
+		return null;
+	}
 	
 
 	@SuppressWarnings("unchecked")

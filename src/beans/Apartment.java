@@ -3,7 +3,10 @@ package beans;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -228,14 +231,43 @@ public class Apartment {
 	
 	
 	
-	public void addNewRentDates(String from,String to) {
+	public boolean addNewRentDates(String from,String to) {
+		LocalDate wantedStart = LocalDate.parse(from);
+		LocalDate wantedEnd = LocalDate.parse(to);
+		
+		LocalDate today = LocalDate.now(); 
+		if(wantedStart.isBefore(today)) {
+			return false;
+		}if(wantedStart.isAfter(wantedEnd)) {
+			return false;
+		}
+		else {
+			
+			for(RentPeriod rentPeriod : this.datesForRenting) {
+			
+			LocalDate startPeriod = LocalDate.parse(rentPeriod.from);
+			LocalDate endPeriod = LocalDate.parse(rentPeriod.to);
+			
+			if(wantedStart.isBefore(startPeriod) && wantedEnd.isBefore(endPeriod)) {
+				continue;
+			}
+			if(wantedStart.isAfter(endPeriod) && wantedEnd.isAfter(endPeriod)) {
+				continue;
+			}
+			if((wantedStart.isEqual(startPeriod) || (wantedStart.isAfter(startPeriod))) && (wantedEnd.isEqual(endPeriod) || wantedEnd.isBefore(endPeriod) || wantedEnd.isAfter(endPeriod))) {
+				return false;
+			}
+		}
+		
 		RentPeriod rentPeriod = new RentPeriod();
 		rentPeriod.setFrom(from);
 		rentPeriod.setTo(to);
 		this.datesForRenting.add(rentPeriod);
+		return true;
+		
 	}
 	
-	
+	}
 	
 	
 }

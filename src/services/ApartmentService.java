@@ -27,6 +27,7 @@ import beans.ApartmentStatus;
 import beans.RentPeriod;
 import beans.Reservation;
 import beans.ReservationStatus;
+import beans.User;
 import dao.AmenitiesDAO;
 import dao.ApartmentDAO;
 import dao.ReservationDAO;
@@ -87,22 +88,23 @@ public class ApartmentService {
 	public Response addDates(RentPeriod rp,@PathParam("idOne") String idOne,@Context HttpServletRequest request) {
 
 		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
-		dao.findApartmentById(idOne).addNewRentDates(rp.from, rp.to);
-
-
-		dao.getApartments().put(dao.findApartmentById(idOne).getName(), dao.findApartmentById(idOne));
+		Apartment a = dao.findApartmentById(idOne);
+		boolean isAdded = a.addNewRentDates(rp.from, rp.to);
+		if(isAdded) {
+		dao.getApartments().put(dao.findApartmentById(idOne).getName(), a);
 		context.setAttribute("ApartmentDAO", dao);
-
 		dao.saveApartment(context.getRealPath(""), dao);
-
 		return Response.ok(rp).build();
+		}else {
+			return Response.serverError().build();
+		}
+
 	}
-
-
+	
 
 
 	@GET
-	@Path("/apartments/all/{idOne}")
+	@Path("/apartments/allactive/{idOne}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<Apartment> getAllFromHostActive(@PathParam("idOne") String idOne,@Context HttpServletRequest request) {
@@ -195,26 +197,93 @@ public class ApartmentService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response delete(@PathParam("id") String id) {
 		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
-
+		ReservationDAO resdDao = (ReservationDAO) context.getAttribute("ReservationDAO");
+		
 		Apartment ap = dao.findById(id);
 
 		if(ap.getReservations().size() != 0) {
-			for(Reservation r : ap.getReservations()) {
-				r.setReservationStatus(ReservationStatus.CANCLED);
+			for(String r : ap.getReservations()) {
+				Reservation reservation = resdDao.findReservationById(UUID.fromString(r));
+				reservation.setReservationStatus(ReservationStatus.CANCLED);
 			}
-		Apartment ap = dao.findApartmentByName(name);
-		ReservationDAO resdDao = (ReservationDAO) context.getAttribute("ReservationDAO");
-
-		for(String r : ap.getReservations()) {
-			Reservation reservation = resdDao.findReservationById(UUID.fromString(r));
-			reservation.setReservationStatus(ReservationStatus.CANCLED);
 		}
 
 		ap.setStatus(ApartmentStatus.DELETED);
-
 		context.setAttribute("ApartmentDAO", dao);
+		dao.saveApartment(context.getRealPath(""), dao);
 
+		
 		return Response.ok().build();
+	}
+	
+	
+	
+	@POST
+	@Path("/editapartment")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response edit(Apartment a) {		
+		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
+		Apartment apartment = dao.findByUUID(a.getIdOne());
+		
+		if(apartment != null) {
+		
+		if(a.getName() != "") {
+			if(!a.getName().equals(apartment.getName())) {
+				apartment.setName(a.getName());
+			}
+		}
+		
+		if(a.getCheckInTime() != "") {
+			if(!a.getCheckInTime().equals(apartment.getCheckInTime())) {
+				apartment.setCheckInTime(a.getCheckInTime());
+			}
+		}
+		
+		if(a.getCheckOutTime() != "") {
+			if(!a.getCheckOutTime().equals(apartment.getCheckOutTime())) {
+				apartment.setCheckOutTime(a.getCheckOutTime());
+			}
+		}
+		
+		if(a.getPrice() > 0) {
+			if(a.getPrice() != apartment.getPrice()) {
+				apartment.setPrice(a.getPrice());
+			}
+		}
+		
+		if(a.getNumberOfGuests() > 0) {
+			if(a.getNumberOfGuests() != apartment.getNumberOfGuests()) {
+				apartment.setNumberOfGuests(a.getNumberOfGuests());
+			}
+		}
+		
+		if(a.getNumberOfRooms() > 0) {
+			if(a.getNumberOfRooms() != apartment.getNumberOfRooms()) {
+				apartment.setNumberOfRooms(a.getNumberOfRooms());
+			}
+		}
+		
+		if(a.getAmenities().size() != 0) {
+			if(!a.getAmenities().equals(apartment.getAmenities())) {
+				apartment.setAmenities(a.getAmenities());
+			}
+		}
+		
+		if(a.getLocation() != null) {
+			if(a.getLocation().equals(apartment.getLocation())) {
+				apartment.setLocation(a.getLocation());
+			}
+		}
+		
+		context.setAttribute("ApartmentDAO", dao);
+		dao.saveApartment(context.getRealPath(""), dao);
+	
+		return Response.ok(apartment).build();
+		} else {
+			
+			return Response.status(400).build();
+			
+		}
 	}
 
 

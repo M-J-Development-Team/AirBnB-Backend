@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -22,6 +23,7 @@ import beans.Amenities;
 import beans.Apartment;
 import beans.ApartmentStatus;
 import beans.ApartmentType;
+import beans.RentPeriod;
 import beans.User;
 
 

@@ -43,7 +43,24 @@ public class Apartment {
 		
 	}
 	
-	
+	public Apartment(ApartmentType type, int numberOfRooms, int numberOfGuests, ArrayList<RentPeriod> datesForRenting,
+			ArrayList<String> freeDates, ArrayList<String> rentedDates, String host, UUID idOne, float price,
+			ApartmentStatus status, ArrayList<String> reservations, String name) {
+		super();
+		this.type = type;
+		this.numberOfRooms = numberOfRooms;
+		this.numberOfGuests = numberOfGuests;
+		this.datesForRenting = datesForRenting;
+		this.freeDates = freeDates;
+		this.rentedDates = rentedDates;
+		this.host = host;
+		this.idOne = idOne;
+		this.price = price;
+		this.status = status;
+		this.reservations = reservations;
+		this.name = name;
+	}
+
 	public Apartment(ApartmentType type, int numberOfRooms, int numberOfGuests, Location location,
 			ArrayList<RentPeriod> datesForRenting, ArrayList<String> freeDates, String host,
 			ArrayList<ApartmentComment> comments, String photoPath, UUID idOne, float price, String checkInTime,

@@ -132,7 +132,7 @@ public class ReservationDAO {
 		return myReservations;
 	}
 	
-	public ArrayList<User> allReservationsForMyApartments(String username,ArrayList<Apartment> myapartments,UserDAO userdao,ApartmentDAO apartmentdao) {	
+	public ArrayList<User> allGuestsForMyApartments(String username,ArrayList<Apartment> myapartments,UserDAO userdao,ApartmentDAO apartmentdao) {	
 		ArrayList<User> guests = new ArrayList<User>();
 		Collection<Reservation> res = reservations.values();
 		if(myapartments != null && res != null) {
@@ -144,7 +144,18 @@ public class ReservationDAO {
 	}	
 		
 	return guests;
-}
+	}
+	
+	public ArrayList<Reservation> allReservationsForMyApartments(User host) {	
+		
+		ArrayList<Reservation> reservationsList = new ArrayList<Reservation>();
+		for(String r : host.getReservations()) {
+			Reservation res = findReservationById(UUID.fromString(r));
+			reservationsList.add(res);
+		}
+		
+		return reservationsList;
+	}
 	
 	@SuppressWarnings("unchecked")
 	private void loadReservation(String contextPath) {

@@ -38,17 +38,6 @@ public class ApartmentDAO {
 	public ApartmentDAO(String contextPath) {
 		apartments = new HashMap<String, Apartment>();
 		loadApartment(contextPath);
-		
-		ArrayList<RentPeriod> datesForRenting = new ArrayList<>();
-		ArrayList<String> freeDates = new ArrayList<>();
-		freeDates.add("2020-07-10");
-		freeDates.add("2020-07-11");
-		freeDates.add("2020-07-12");
-		freeDates.add("2020-07-13");
-		ArrayList<String> rentedDates = new ArrayList<String>();
-		ArrayList<String> reservations = new ArrayList<>();
-		Apartment a1 = new Apartment(ApartmentType.ENTIREPLACE, 3, 4, datesForRenting, freeDates, rentedDates, "marina", UUID.randomUUID(), 12, ApartmentStatus.ACTIVE, reservations, "Minica2");
-		apartments.put("Minica2", a1);
 	}
 	
 	public Apartment findApartmentById(String id) {

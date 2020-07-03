@@ -4,17 +4,18 @@ import java.util.UUID;
 
 public class ApartmentComment {
 	
-	private User guest;
-	private Apartment apartment;
+	private String guest;
+	private String apartmentName;
 	private String text;
 	private float rating;
 	private UUID idOne = UUID.randomUUID();
+	private CommentStatus status = CommentStatus.HIDDEN;
 	
 	
-	public ApartmentComment(User guest, Apartment apartment, String text, float rating) {
+	public ApartmentComment(String guest, String apartmentName, String text, float rating) {
 		super();
 		this.guest = guest;
-		this.apartment = apartment;
+		this.apartmentName = apartmentName;
 		this.text = text;
 		this.rating = rating;
 	}
@@ -26,23 +27,24 @@ public class ApartmentComment {
 	}
 
 
-	public User getGuest() {
+	public String getGuest() {
 		return guest;
 	}
 
 
-	public void setGuest(User guest) {
+	public void setGuest(String guest) {
 		this.guest = guest;
 	}
 
 
-	public Apartment getApartment() {
-		return apartment;
+
+	public String getApartmentName() {
+		return apartmentName;
 	}
 
 
-	public void setApartment(Apartment apartment) {
-		this.apartment = apartment;
+	public void setApartmentName(String apartmentName) {
+		this.apartmentName = apartmentName;
 	}
 
 
@@ -74,9 +76,16 @@ public class ApartmentComment {
 	public void setIdOne(UUID idOne) {
 		this.idOne = idOne;
 	}
-	
-	
-	
+
+
+	public CommentStatus getStatus() {
+		return status;
+	}
+
+
+	public void setStatus(CommentStatus status) {
+		this.status = status;
+	}
 	
 
 }

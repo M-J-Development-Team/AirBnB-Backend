@@ -231,12 +231,22 @@ public class ReservationService {
 		
 		User host = userdao.findbyID(idOne);
 		ArrayList<Apartment> hostApartmentsActive = apartmentdao.allActiveApartmentsFromHost(host);
-		ArrayList<User> guests = dao.allReservationsForMyApartments(host.getUsername(),hostApartmentsActive , userdao,apartmentdao);
+		ArrayList<User> guests = dao.allGuestsForMyApartments(host.getUsername(),hostApartmentsActive , userdao,apartmentdao);
 		return guests;
 		
 	}
 	
+	@GET
+	@Path("/reservations/all-hosts-reservations/{username}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Reservation> getAllHostsReservations(@PathParam("username") String username,@Context HttpServletRequest request) {
+		ReservationDAO dao = (ReservationDAO) context.getAttribute("ReservationDAO");
+		UserDAO userdao = (UserDAO) context.getAttribute("UserDAO");
+		
+		User host = userdao.findUserByUsername(username);
+		return dao.allReservationsForMyApartments(host);
+	}
 	
-	
-	
+
 }

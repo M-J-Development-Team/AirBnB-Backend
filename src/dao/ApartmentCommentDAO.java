@@ -7,7 +7,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.UUID;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -18,6 +20,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 
 import beans.Apartment;
 import beans.ApartmentComment;
+import beans.CommentStatus;
 import beans.Reservation;
 
 public class ApartmentCommentDAO {
@@ -44,16 +47,69 @@ public class ApartmentCommentDAO {
 		this.comments = comments;
 	}
 	
-	public ArrayList<ApartmentComment> getAllCommentsFromApartment(Apartment a){
+	public ArrayList<ApartmentComment> getAllCommentsFromApartment(String name){
 		ArrayList<ApartmentComment> retComments = new ArrayList<>();
 		for(ApartmentComment comment : comments.values()) {
-			if(comment.getApartment().getIdOne().equals(a.getIdOne())) {
+			if(comment.getApartmentName().equals(name)) {
 				retComments.add(comment);
 			}
 		}
 		return retComments;
 	}
-
+	
+	public Collection<ApartmentComment> getAllComments(){
+		return comments.values();
+	}
+	
+	public ArrayList<ApartmentComment> getAllCommentsFromApartmentApproved(String name){
+		ArrayList<ApartmentComment> retComments = new ArrayList<>();
+		for(ApartmentComment comment : comments.values()) {
+			if(comment.getApartmentName().equals(name)) {
+				if(comment.getStatus().equals(CommentStatus.VISIBLE)) {
+				retComments.add(comment);
+				}
+			}
+		}
+		return retComments;
+	}
+	
+	public ArrayList<ApartmentComment> getAllCommentsUnapprovedForHost(String username,ArrayList<Apartment> hostApartments){
+		ArrayList<ApartmentComment> retComments = new ArrayList<>();
+		for(Apartment a : hostApartments) {
+				for(ApartmentComment comment : comments.values()) {
+					if(comment.getApartmentName().equals(a.getName())) {
+							if(comment.getStatus().equals(CommentStatus.HIDDEN)) {
+								retComments.add(comment);
+								}
+							}
+						}
+					}
+	return retComments;
+	}
+	
+	public boolean setCommentToVisible(UUID idOne) {
+		
+		for(ApartmentComment comment : comments.values()) {
+			if(comment.getIdOne().equals(idOne)) {
+				comment.setStatus(CommentStatus.VISIBLE);
+				return true;
+				}
+			}	
+		return false;
+	}
+	
+	public boolean setCommentToDeclined(UUID idOne) {
+		
+		for(ApartmentComment comment : comments.values()) {
+			if(comment.getIdOne().equals(idOne)) {
+				comment.setStatus(CommentStatus.DECLINED);
+				return true;
+				}
+			}	
+		return false;
+	}
+	
+	
 
 	public void saveComment(String path, ApartmentCommentDAO comments) {
 		

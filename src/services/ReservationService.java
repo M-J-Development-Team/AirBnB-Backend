@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,6 +53,12 @@ public class ReservationService {
 	public Collection<Reservation> getAll(@Context HttpServletRequest request) {
 		
 		ReservationDAO dao = (ReservationDAO) context.getAttribute("ReservationDAO");
+		
+		for(Reservation r : dao.getReservations().values()) {
+			if(LocalDate.parse(r.getReservedTill()).isAfter(LocalDate.now()) && r.getReservationStatus().equals(ReservationStatus.ACCEPTED)) {
+				r.setReservationStatus(ReservationStatus.COMPLETED);
+			}
+		}
 		return dao.getReservations().values();
 	}
 	
@@ -187,11 +194,26 @@ public class ReservationService {
 		
 		a.getRentedDates().removeAll(toRemove);
 		a.getFreeDates().addAll(toRemove);
+		a.getReservations().remove(idOne);
 		
 		r.setReservationStatus(ReservationStatus.CANCLED);
 		
 		dao.saveReservation(context.getRealPath(""), dao);
 		apartments.saveApartment(context.getRealPath(""), apartments);
+		
+		return Response.ok().build();
+	}
+	
+	@POST
+	@Path("/reservations/approve/{idOne}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response approve(@PathParam("idOne") String idOne, @Context HttpServletRequest request)
+	{
+		ReservationDAO dao = (ReservationDAO) context.getAttribute("ReservationDAO");
+		Reservation r = dao.findReservationById(UUID.fromString(idOne));
+		
+		r.setReservationStatus(ReservationStatus.ACCEPTED);
 		
 		return Response.ok().build();
 	}

@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -20,6 +21,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import beans.Apartment;
 import beans.Reservation;
 import beans.ReservationStatus;
+import beans.User;
 
 public class ReservationDAO {
 	
@@ -30,8 +32,10 @@ public class ReservationDAO {
 	}
 	
 	public ReservationDAO(String contextPath) {
+		System.out.println("loading reservations with given contextPath"+contextPath);
 		reservations = new HashMap<String, Reservation>();
-		
+		loadReservation(contextPath);
+
 	}
 	
 	public Reservation findReservationById(UUID id) {
@@ -127,7 +131,20 @@ public class ReservationDAO {
 		
 		return myReservations;
 	}
-
+	
+	public ArrayList<User> allReservationsForMyApartments(String username,ArrayList<Apartment> myapartments,UserDAO userdao,ApartmentDAO apartmentdao) {	
+		ArrayList<User> guests = new ArrayList<User>();
+		Collection<Reservation> res = reservations.values();
+		if(myapartments != null && res != null) {
+		for(Reservation r : res) {
+			if(myapartments.contains(apartmentdao.findApartmentByName(r.getApartment()))) {
+				guests.add(userdao.findUserByUsername(r.getGuest()));
+			}
+		}
+	}	
+		
+	return guests;
+}
 	
 	@SuppressWarnings("unchecked")
 	private void loadReservation(String contextPath) {
@@ -135,7 +152,7 @@ public class ReservationDAO {
 		BufferedReader in = null;
 		File file = null;
 		try {
-			file = new File(contextPath + "/reservation.txt");
+			file = new File(contextPath + "/reservations.txt");
 			in = new BufferedReader(new FileReader(file));
 
 			ObjectMapper mapper = new ObjectMapper();
@@ -147,6 +164,7 @@ public class ReservationDAO {
 
 		} catch (FileNotFoundException fnfe) {
 			try {
+				System.out.println("im writing a new file"+file);
 				file.createNewFile();
 				fileWriter = new FileWriter(file);
 				ObjectMapper objectMapper = new ObjectMapper();
@@ -186,7 +204,7 @@ public class ReservationDAO {
 		
 		
 		File f = new File(path + "/reservations.txt");
-		System.out.println(path);
+		System.out.println("HERE"+path);
 		FileWriter fileWriter = null;
 		try {
 			fileWriter = new FileWriter(f);
@@ -217,6 +235,8 @@ public class ReservationDAO {
 	public void setReservations(HashMap<String, Reservation> reservations) {
 		this.reservations = reservations;
 	}
+	
+	
 
 	
 }

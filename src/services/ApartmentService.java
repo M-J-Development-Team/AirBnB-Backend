@@ -23,12 +23,14 @@ import javax.ws.rs.core.Response;
 import beans.Amenities;
 import beans.AmenityStatus;
 import beans.Apartment;
+import beans.ApartmentComment;
 import beans.ApartmentStatus;
 import beans.RentPeriod;
 import beans.Reservation;
 import beans.ReservationStatus;
 import beans.User;
 import dao.AmenitiesDAO;
+import dao.ApartmentCommentDAO;
 import dao.ApartmentDAO;
 import dao.ReservationDAO;
 import dao.UserDAO;
@@ -196,6 +198,9 @@ public class ApartmentService {
 	@Path("/apartments/delete/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response delete(@PathParam("id") String id) {
+		
+		context.setAttribute("ReservationDAO", new ReservationDAO(context.getRealPath("")));
+		
 		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
 		ReservationDAO resdDao = (ReservationDAO) context.getAttribute("ReservationDAO");
 		
@@ -223,12 +228,21 @@ public class ApartmentService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response edit(Apartment a) {		
 		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
+		
+		context.setAttribute("ApartmentCommentDAO", new ApartmentCommentDAO(context.getRealPath("")));
+		ApartmentCommentDAO daoComments = (ApartmentCommentDAO) context.getAttribute("ApartmentCommentDAO");
+		
 		Apartment apartment = dao.findByUUID(a.getIdOne());
 		
 		if(apartment != null) {
-		
+			Apartment obj = dao.getApartments().get(apartment.getName());
+			
 		if(a.getName() != "") {
 			if(!a.getName().equals(apartment.getName())) {
+				dao.getApartments().remove(apartment.getName(),apartment);
+				for(ApartmentComment comment: daoComments.getAllCommentsFromApartment(apartment.getName())) {
+					comment.setApartmentName(a.getName());
+				}
 				apartment.setName(a.getName());
 			}
 		}
@@ -275,8 +289,13 @@ public class ApartmentService {
 			}
 		}
 		
+		
 		context.setAttribute("ApartmentDAO", dao);
+		dao.getApartments().put(a.getName(), obj);
 		dao.saveApartment(context.getRealPath(""), dao);
+		
+		context.setAttribute("ApartmentCommentDAO", daoComments);
+		daoComments.saveComment(context.getRealPath(""), daoComments);
 	
 		return Response.ok(apartment).build();
 		} else {

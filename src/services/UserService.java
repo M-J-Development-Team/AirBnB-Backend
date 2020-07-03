@@ -19,10 +19,9 @@ import javax.ws.rs.core.Response;
 
 import beans.Amenities;
 import beans.Apartment;
+
 import beans.Role;
 import beans.User;
-import dao.AmenitiesDAO;
-import dao.ApartmentDAO;
 import dao.UserDAO;
 
 @Path("")
@@ -39,7 +38,6 @@ public class UserService {
 			context.setAttribute("UserDAO", new UserDAO(contextPath));
 		}
 	}
-	
 	
 
 	@POST
@@ -259,6 +257,8 @@ public class UserService {
 			
 		}
 	}
+	
+
 
 
 }

@@ -38,7 +38,7 @@ public class ApartmentService {
 
 	@Context
 	ServletContext context;
-
+	
 	@PostConstruct
 	public void init() {
 
@@ -285,6 +285,6 @@ public class ApartmentService {
 			
 		}
 	}
-
+	
 
 }

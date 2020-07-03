@@ -1,11 +1,14 @@
 package beans;
 
+import java.util.UUID;
+
 public class ApartmentComment {
 	
 	private User guest;
 	private Apartment apartment;
 	private String text;
 	private float rating;
+	private UUID idOne = UUID.randomUUID();
 	
 	
 	public ApartmentComment(User guest, Apartment apartment, String text, float rating) {
@@ -60,6 +63,16 @@ public class ApartmentComment {
 
 	public void setRating(float rating) {
 		this.rating = rating;
+	}
+
+
+	public UUID getIdOne() {
+		return idOne;
+	}
+
+
+	public void setIdOne(UUID idOne) {
+		this.idOne = idOne;
 	}
 	
 	

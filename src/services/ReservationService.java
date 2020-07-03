@@ -106,7 +106,7 @@ public class ReservationService {
 	}
 	
 	@GET
-	@Path("/reservations/all/{usernmae}")
+	@Path("/reservations/all/{username}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<Reservation> getAllMyReservations(@PathParam("username") String username,@Context HttpServletRequest request) {
@@ -195,6 +195,26 @@ public class ReservationService {
 		
 		return Response.ok().build();
 	}
+	
+	@GET
+	@Path("/reservations/all-my-guests/{idOne}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<User> getAllMyGuests(@PathParam("idOne") String idOne,@Context HttpServletRequest request) {
+		
+		ReservationDAO dao = (ReservationDAO) context.getAttribute("ReservationDAO");
+		ArrayList<Reservation> r = dao.allReservations();
+		UserDAO userdao = (UserDAO) context.getAttribute("UserDAO");
+		ApartmentDAO apartmentdao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
+		
+		User host = userdao.findbyID(idOne);
+		ArrayList<Apartment> hostApartmentsActive = apartmentdao.allActiveApartmentsFromHost(host);
+		ArrayList<User> guests = dao.allReservationsForMyApartments(host.getUsername(),hostApartmentsActive , userdao,apartmentdao);
+		return guests;
+		
+	}
+	
+	
 	
 	
 }

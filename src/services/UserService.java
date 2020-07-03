@@ -221,9 +221,10 @@ public class UserService {
 		
 		
 		if(u != null) {
-		
+			User obj = dao.getUsers().get(u.getName());
 		if(user.getName() != "") {
 			if(!user.getName().equals(u.getName())) {
+				dao.getUsers().remove(u.getName(),u);
 				u.setName(user.getName());
 			}
 		}
@@ -248,6 +249,7 @@ public class UserService {
 		
 		
 		context.setAttribute("UserDAO", dao);
+		dao.getUsers().put(u.getName(), obj);
 		dao.saveUser(context.getRealPath(""), dao);
 		
 		return Response.ok(u).build();

@@ -25,6 +25,7 @@ import beans.AmenityStatus;
 import beans.Apartment;
 import beans.ApartmentComment;
 import beans.ApartmentStatus;
+import beans.Filter;
 import beans.RentPeriod;
 import beans.Reservation;
 import beans.ReservationStatus;
@@ -81,6 +82,17 @@ public class ApartmentService {
 		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
 		Apartment a = dao.findApartmentById(idOne);
 		return Response.ok(a).build();
+	}
+	
+	@POST
+	@Path("/apartments/filter")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Apartment> filter(Filter filter, @Context HttpServletRequest request) {
+
+		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
+		ArrayList<Apartment> apartments = dao.filterApartments(filter, dao.getAllActiveApartments());
+		return apartments;
 	}
 
 	@POST

@@ -47,10 +47,10 @@ public class ApartmentCommentDAO {
 		this.comments = comments;
 	}
 	
-	public ArrayList<ApartmentComment> getAllCommentsFromApartment(String name){
+	public ArrayList<ApartmentComment> getAllCommentsFromApartment(UUID idOne){
 		ArrayList<ApartmentComment> retComments = new ArrayList<>();
 		for(ApartmentComment comment : comments.values()) {
-			if(comment.getApartmentName().equals(name)) {
+			if(comment.getApartmentId().equals(idOne)) {
 				retComments.add(comment);
 			}
 		}
@@ -61,11 +61,9 @@ public class ApartmentCommentDAO {
 		return comments.values();
 	}
 	
-	public ArrayList<ApartmentComment> getAllCommentsFromApartmentApproved(String name){
 	public ArrayList<ApartmentComment> getAllCommentsFromApartmentApproved(UUID idOne){
 		ArrayList<ApartmentComment> retComments = new ArrayList<>();
 		for(ApartmentComment comment : comments.values()) {
-			if(comment.getApartmentName().equals(name)) {
 			if(comment.getApartmentId().equals(idOne)) {
 				if(comment.getStatus().equals(CommentStatus.VISIBLE)) {
 				retComments.add(comment);
@@ -79,7 +77,6 @@ public class ApartmentCommentDAO {
 		ArrayList<ApartmentComment> retComments = new ArrayList<>();
 		for(Apartment a : hostApartments) {
 				for(ApartmentComment comment : comments.values()) {
-					if(comment.getApartmentName().equals(a.getName())) {
 					if(comment.getApartmentId().equals(a.getIdOne())) {
 							if(comment.getStatus().equals(CommentStatus.HIDDEN)) {
 								retComments.add(comment);

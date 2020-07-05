@@ -2,6 +2,7 @@ package services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -21,6 +22,7 @@ import beans.Amenities;
 import beans.AmenityStatus;
 import beans.Apartment;
 import beans.ApartmentComment;
+import beans.CommentStatus;
 import beans.User;
 import dao.AmenitiesDAO;
 import dao.ApartmentCommentDAO;
@@ -48,13 +50,36 @@ public class ApartmentCommentService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addComment(ApartmentComment comment, @Context HttpServletRequest request)
-	{
+	{	
+		context.setAttribute("ApartmentDAO", new ApartmentDAO(context.getRealPath("")));
 		ApartmentCommentDAO apartmentCommentDAO = (ApartmentCommentDAO) context.getAttribute("ApartmentCommentDAO");
+		ApartmentDAO apartmentDAO = (ApartmentDAO) context.getAttribute("ApartmentDAO");
 		
+		Apartment a = apartmentDAO.findApartmentById(comment.getApartmentId().toString());
 		
+		if(a.getComments().size() != 0) {
+		float total =0;
+		
+		for(String c : a.getComments()) {
+			ApartmentComment apCom =  apartmentCommentDAO.findById(UUID.fromString(c));
+			total = total + apCom.getRating();		
+		}
+		
+		total = total + comment.getRating();
+		double rating = total/(a.getComments().size()+1);
+		a.setRating(rating);
+		}else {
+			a.setRating(comment.getRating());
+		}
+		
+		a.getComments().add(comment.getIdOne().toString());
 		apartmentCommentDAO.getComments().put(comment.getIdOne().toString(), comment);
+		
 		context.setAttribute("ApartmentCommentDAO", apartmentCommentDAO);
 		apartmentCommentDAO.saveComment(context.getRealPath(""), apartmentCommentDAO);
+		
+		context.setAttribute("ApartmentDAO", apartmentDAO);
+		apartmentDAO.saveApartment(context.getRealPath(""), apartmentDAO);
 		
 
 		
@@ -75,14 +100,13 @@ public class ApartmentCommentService {
 	}
 	
 	@GET
-	@Path("/get-all-approved-by-apartment/{name}")
+	@Path("/get-all-approved-by-apartment/{idOne}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<ApartmentComment> getAllCommentsByApartmentApproved(@PathParam("name") String name,@Context HttpServletRequest request) {
+	public Collection<ApartmentComment> getAllCommentsByApartmentApproved(@PathParam("idOne") String idOne,@Context HttpServletRequest request) {
 		
-		ApartmentCommentDAO apartmentCommentDAO = (ApartmentCommentDAO) context.getAttribute("ApartmentCommentDAO");				
-		return apartmentCommentDAO.getAllCommentsFromApartmentApproved(name);
-	
+		ApartmentCommentDAO apartmentCommentDAO = (ApartmentCommentDAO) context.getAttribute("ApartmentCommentDAO");	
+		return apartmentCommentDAO.getAllCommentsFromApartmentApproved(UUID.fromString(idOne));
 	}
 	
 	@GET
@@ -106,13 +130,13 @@ public class ApartmentCommentService {
 	}
 	
 	@GET
-	@Path("/get-all-comments-by-apartment/{name}")
+	@Path("/get-all-comments-by-apartment/{idOne}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<ApartmentComment> getAllCommentsByApartment(@PathParam("name") String name,@Context HttpServletRequest request) {
+	public Collection<ApartmentComment> getAllCommentsByApartment(@PathParam("idOne") String idOne,@Context HttpServletRequest request) {
 		
 		ApartmentCommentDAO apartmentCommentDAO = (ApartmentCommentDAO) context.getAttribute("ApartmentCommentDAO");				
-		return apartmentCommentDAO.getAllCommentsFromApartment(name);
+		return apartmentCommentDAO.getAllCommentsFromApartment(UUID.fromString(idOne));
 	
 	}
 	
@@ -122,7 +146,7 @@ public class ApartmentCommentService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response setCommentToVisible(@PathParam("idOne") String idOne,@Context HttpServletRequest request) {
 		
-		ApartmentCommentDAO ApartmentCommentDAO = (ApartmentCommentDAO) context.getAttribute("ApartmentCommentDAO");
+		ApartmentCommentDAO ApartmentCommentDAO = (ApartmentCommentDAO) context.getAttribute("ApartmentCommentDAO");		
 		if(ApartmentCommentDAO.setCommentToVisible(UUID.fromString(idOne))){
 			context.setAttribute("ApartmentCommentDAO", ApartmentCommentDAO);
 			ApartmentCommentDAO.saveComment(context.getRealPath(""), ApartmentCommentDAO);	
@@ -140,7 +164,7 @@ public class ApartmentCommentService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response setCommentToDeclined(@PathParam("idOne") String idOne,@Context HttpServletRequest request) {
 		
-		ApartmentCommentDAO ApartmentCommentDAO = (ApartmentCommentDAO) context.getAttribute("ApartmentCommentDAO");
+		ApartmentCommentDAO ApartmentCommentDAO = (ApartmentCommentDAO) context.getAttribute("ApartmentCommentDAO");		
 		if(ApartmentCommentDAO.setCommentToDeclined(UUID.fromString(idOne))){
 			context.setAttribute("ApartmentCommentDAO", ApartmentCommentDAO);
 			ApartmentCommentDAO.saveComment(context.getRealPath(""), ApartmentCommentDAO);	
@@ -151,4 +175,7 @@ public class ApartmentCommentService {
 		}
 	
 	}
+	
+
+	
 }

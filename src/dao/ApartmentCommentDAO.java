@@ -11,6 +11,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
+import javax.servlet.ServletContext;
+
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,10 +49,10 @@ public class ApartmentCommentDAO {
 		this.comments = comments;
 	}
 	
-	public ArrayList<ApartmentComment> getAllCommentsFromApartment(String name){
+	public ArrayList<ApartmentComment> getAllCommentsFromApartment(UUID idOne){
 		ArrayList<ApartmentComment> retComments = new ArrayList<>();
 		for(ApartmentComment comment : comments.values()) {
-			if(comment.getApartmentName().equals(name)) {
+			if(comment.getApartmentId().equals(idOne)) {
 				retComments.add(comment);
 			}
 		}
@@ -61,10 +63,10 @@ public class ApartmentCommentDAO {
 		return comments.values();
 	}
 	
-	public ArrayList<ApartmentComment> getAllCommentsFromApartmentApproved(String name){
+	public ArrayList<ApartmentComment> getAllCommentsFromApartmentApproved(UUID idOne){
 		ArrayList<ApartmentComment> retComments = new ArrayList<>();
 		for(ApartmentComment comment : comments.values()) {
-			if(comment.getApartmentName().equals(name)) {
+			if(comment.getApartmentId().equals(idOne)) {
 				if(comment.getStatus().equals(CommentStatus.VISIBLE)) {
 				retComments.add(comment);
 				}
@@ -77,7 +79,7 @@ public class ApartmentCommentDAO {
 		ArrayList<ApartmentComment> retComments = new ArrayList<>();
 		for(Apartment a : hostApartments) {
 				for(ApartmentComment comment : comments.values()) {
-					if(comment.getApartmentName().equals(a.getName())) {
+					if(comment.getApartmentId().equals(a.getIdOne())) {
 							if(comment.getStatus().equals(CommentStatus.HIDDEN)) {
 								retComments.add(comment);
 								}
@@ -98,6 +100,15 @@ public class ApartmentCommentDAO {
 		return false;
 	}
 	
+	public ApartmentComment findById(UUID id) {
+		for(ApartmentComment comment : comments.values()) {
+			if(comment.getIdOne().equals(id)) {
+				return comment;
+				}
+			}
+		return null;
+	}
+	
 	public boolean setCommentToDeclined(UUID idOne) {
 		
 		for(ApartmentComment comment : comments.values()) {
@@ -106,6 +117,24 @@ public class ApartmentCommentDAO {
 				return true;
 				}
 			}	
+		return false;
+	}
+		
+	public boolean checkHasCommented(String idOne,String apartmentId,ServletContext context) {
+		
+		ApartmentCommentDAO apartmentCommentDAO = (ApartmentCommentDAO) context.getAttribute("ApartmentCommentDAO");
+		context.setAttribute("UserDAO", new UserDAO(context.getRealPath("")));
+		UserDAO userDAO = (UserDAO) context.getAttribute("UserDAO");
+		
+		if(apartmentCommentDAO.getAllComments() != null) {
+		if(apartmentCommentDAO.getAllCommentsFromApartment(UUID.fromString(apartmentId)) != null) {
+		for(ApartmentComment comment : apartmentCommentDAO.getAllCommentsFromApartment(UUID.fromString(apartmentId))) {
+			if(comment.getGuest().equals(userDAO.findbyID(idOne).getUsername())) {
+				return true;
+			}
+		}
+		}	
+	}
 		return false;
 	}
 	

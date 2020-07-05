@@ -23,7 +23,7 @@ public class Apartment implements Comparable< Apartment > {
 	private ArrayList<String> freeDates = new ArrayList<>();
 	private ArrayList<String> rentedDates = new ArrayList<String>();
 	private String host;
-	private ArrayList<ApartmentComment> comments = new ArrayList<>();
+	private ArrayList<String> comments = new ArrayList<>();
 	private String photoPath;
 	private UUID idOne = UUID.randomUUID();
 	private float price;
@@ -33,6 +33,7 @@ public class Apartment implements Comparable< Apartment > {
 	private ArrayList<Amenities> amenities = new ArrayList<>();
 	private ArrayList<String> reservations = new ArrayList<>();
 	private String name;
+	private double rating = 0;
 	
 	@PostConstruct
 	public void init() {
@@ -63,7 +64,7 @@ public class Apartment implements Comparable< Apartment > {
 
 	public Apartment(ApartmentType type, int numberOfRooms, int numberOfGuests, Location location,
 			ArrayList<RentPeriod> datesForRenting, ArrayList<String> freeDates, String host,
-			ArrayList<ApartmentComment> comments, String photoPath, UUID idOne, float price, String checkInTime,
+			ArrayList<String> comments, String photoPath, UUID idOne, float price, String checkInTime,
 			String checkOutTime, ApartmentStatus status, ArrayList<Amenities> amenities,
 			ArrayList<String> reservations, ArrayList<String> rentedDates) {
 		super();
@@ -147,11 +148,13 @@ public class Apartment implements Comparable< Apartment > {
 		this.host = host;
 	}
 
-	public ArrayList<ApartmentComment> getComments() {
+	
+
+	public ArrayList<String> getComments() {
 		return comments;
 	}
 
-	public void setComments(ArrayList<ApartmentComment> comments) {
+	public void setComments(ArrayList<String> comments) {
 		this.comments = comments;
 	}
 
@@ -247,7 +250,14 @@ public class Apartment implements Comparable< Apartment > {
 	}
 	
 	
-	
+	public double getRating() {
+		return rating;
+	}
+
+	public void setRating(double rating) {
+		this.rating = rating;
+	}
+
 	public boolean addNewRentDates(String from,String to) {
 		LocalDate wantedStart = LocalDate.parse(from);
 		LocalDate wantedEnd = LocalDate.parse(to);

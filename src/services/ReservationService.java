@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -161,6 +162,7 @@ public class ReservationService {
 		
 		a.setRentedDates(totalDates);
 		r.setRentedDates(totalDates);
+		
 		for(String date : totalDates) {
 			a.getFreeDates().remove(date);
 		}
@@ -174,6 +176,191 @@ public class ReservationService {
 		return Response.ok().build();
 		
 	}
+	
+	@POST
+	@Path("/reservation/sortGuest/{way}/{username}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Reservation> sort(@PathParam("way") String way, @PathParam("username") String username, @Context HttpServletRequest request) {
+		ReservationDAO dao = (ReservationDAO) context.getAttribute("ReservationDAO");
+		ArrayList<Reservation> reservations = dao.allMyReservations(username);
+		
+		if(way.equals("ascending")) {
+			Collections.sort(reservations);
+		} else if (way.equals("descending")) {
+			Collections.sort(reservations, Collections.reverseOrder());
+		}
+		
+		return reservations;
+		
+	}
+	
+	@POST
+	@Path("/reservation/sortHost/{way}/{username}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Reservation> sortHost(@PathParam("way") String way, @PathParam("username") String username, @Context HttpServletRequest request) {
+		ReservationDAO dao = (ReservationDAO) context.getAttribute("ReservationDAO");
+		UserDAO userdao = (UserDAO) context.getAttribute("UserDAO");
+		
+		User host = userdao.findUserByUsername(username);
+		ArrayList<Reservation> reservations = dao.allReservationsForMyApartments(host);
+		if(way.equals("ascending")) {
+			Collections.sort(reservations);
+		} else if (way.equals("descending")) {
+			Collections.sort(reservations, Collections.reverseOrder());
+		}
+		
+		return reservations;
+		
+	}
+	
+	@POST
+	@Path("/reservation/sortAdmin/{way}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Reservation> sortAdmin(@PathParam("way") String way, @Context HttpServletRequest request) {
+		ReservationDAO dao = (ReservationDAO) context.getAttribute("ReservationDAO");
+		
+		ArrayList<Reservation> reservations = dao.allReservations();
+		if(way.equals("ascending")) {
+			Collections.sort(reservations);
+		} else if (way.equals("descending")) {
+			Collections.sort(reservations, Collections.reverseOrder());
+		}
+		
+		return reservations;
+		
+	}
+	
+	@POST
+	@Path("/reservation/filter/{status}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Reservation> filterByStatusAdmin(@PathParam("status") String status, @Context HttpServletRequest request) {
+		ReservationDAO dao = (ReservationDAO) context.getAttribute("ReservationDAO");
+		
+		if(status.equals("CREATED")) {
+			return dao.createdReservations();
+		} else if(status.equals("COMPLETED")) {
+			return dao.completedReservations();
+		} else if(status.equals("DENIED")) {
+			return dao.deniedReservations();
+		} else if(status.equals("ACCEPTED")) {
+			return dao.acceptedReservations();
+		} else if(status.equals("CANCELED")) {
+			return dao.cancelledReservations();
+		}
+		
+		return dao.allReservations();
+		
+	}
+	
+	@POST
+	@Path("/reservation/filter/{status}/{username}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Reservation> filterByStatusGuest(@PathParam("status") String status, @PathParam("username") String username, @Context HttpServletRequest request) {
+		ReservationDAO dao = (ReservationDAO) context.getAttribute("ReservationDAO");
+		
+		ArrayList<Reservation> reservations = dao.allMyReservations(username);
+		ArrayList<Reservation> toReturn = new ArrayList<Reservation>();
+		
+		if(status.equals("CREATED")) {
+			for(Reservation r : reservations) {
+				if(r.getReservationStatus().equals(ReservationStatus.CREATED)) {
+					toReturn.add(r);
+				}
+			}
+			return toReturn;
+		} else if(status.equals("COMPLETED")) {
+			for(Reservation r : reservations) {
+				if(r.getReservationStatus().equals(ReservationStatus.COMPLETED)) {
+					toReturn.add(r);
+				}
+			}
+			return toReturn;
+		} else if(status.equals("DENIED")) {
+			for(Reservation r : reservations) {
+				if(r.getReservationStatus().equals(ReservationStatus.DENIED)) {
+					toReturn.add(r);
+				}
+			}
+			return toReturn;
+		} else if(status.equals("ACCEPTED")) {
+			for(Reservation r : reservations) {
+				if(r.getReservationStatus().equals(ReservationStatus.ACCEPTED)) {
+					toReturn.add(r);
+				}
+			}
+			return toReturn;
+		} else if(status.equals("CANCELED")) {
+			for(Reservation r : reservations) {
+				if(r.getReservationStatus().equals(ReservationStatus.CANCLED)) {
+					toReturn.add(r);
+				}
+			}
+			return toReturn;
+		}
+		
+		return dao.allMyReservations(username);
+		
+	}
+	
+	@POST
+	@Path("/reservation/filter/{status}/{username}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Reservation> filterByStatusHost(@PathParam("status") String status, @PathParam("username") String username, @Context HttpServletRequest request) {
+		ReservationDAO dao = (ReservationDAO) context.getAttribute("ReservationDAO");
+		
+		UserDAO userdao = (UserDAO) context.getAttribute("UserDAO");
+		
+		User host = userdao.findUserByUsername(username);
+		ArrayList<Reservation> reservations = dao.allReservationsForMyApartments(host);
+		ArrayList<Reservation> toReturn = new ArrayList<Reservation>();
+		
+		if(status.equals("CREATED")) {
+			for(Reservation r : reservations) {
+				if(r.getReservationStatus().equals(ReservationStatus.CREATED)) {
+					toReturn.add(r);
+				}
+			}
+			return toReturn;
+		} else if(status.equals("COMPLETED")) {
+			for(Reservation r : reservations) {
+				if(r.getReservationStatus().equals(ReservationStatus.COMPLETED)) {
+					toReturn.add(r);
+				}
+			}
+			return toReturn;
+		} else if(status.equals("DENIED")) {
+			for(Reservation r : reservations) {
+				if(r.getReservationStatus().equals(ReservationStatus.DENIED)) {
+					toReturn.add(r);
+				}
+			}
+			return toReturn;
+		} else if(status.equals("ACCEPTED")) {
+			for(Reservation r : reservations) {
+				if(r.getReservationStatus().equals(ReservationStatus.ACCEPTED)) {
+					toReturn.add(r);
+				}
+			}
+			return toReturn;
+		} else if(status.equals("CANCELED")) {
+			for(Reservation r : reservations) {
+				if(r.getReservationStatus().equals(ReservationStatus.CANCLED)) {
+					toReturn.add(r);
+				}
+			}
+			return toReturn;
+		}
+		
+		return dao.allReservationsForMyApartments(host);
+		
+	}
+	
 	
 	@POST
 	@Path("/reservations/cancel/{idOne}")

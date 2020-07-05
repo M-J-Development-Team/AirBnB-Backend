@@ -53,7 +53,7 @@ public class ReservationDAO {
 	public ArrayList<Reservation> createdReservations() {
 		ArrayList<Reservation> created = new ArrayList<Reservation>();
 		
-		for(Reservation r : created) {
+		for(Reservation r : reservations.values()) {
 			if(r.getReservationStatus().equals(ReservationStatus.CREATED)) {
 				created.add(r);
 			}
@@ -65,7 +65,7 @@ public class ReservationDAO {
 	public ArrayList<Reservation> deniedReservations() {
 		ArrayList<Reservation> denied = new ArrayList<Reservation>();
 		
-		for(Reservation r : denied) {
+		for(Reservation r : reservations.values()) {
 			if(r.getReservationStatus().equals(ReservationStatus.DENIED)) {
 				denied.add(r);
 			}
@@ -77,7 +77,7 @@ public class ReservationDAO {
 	public ArrayList<Reservation> cancelledReservations() {
 		ArrayList<Reservation> cancelled = new ArrayList<Reservation>();
 		
-		for(Reservation r : cancelled) {
+		for(Reservation r : reservations.values()) {
 			if(r.getReservationStatus().equals(ReservationStatus.CANCLED)) {
 				cancelled.add(r);
 			}
@@ -89,7 +89,7 @@ public class ReservationDAO {
 	public ArrayList<Reservation> acceptedReservations() {
 		ArrayList<Reservation> accepted = new ArrayList<Reservation>();
 		
-		for(Reservation r : accepted) {
+		for(Reservation r : reservations.values()) {
 			if(r.getReservationStatus().equals(ReservationStatus.ACCEPTED)) {
 				accepted.add(r);
 			}
@@ -101,7 +101,7 @@ public class ReservationDAO {
 	public ArrayList<Reservation> completedReservations() {
 		ArrayList<Reservation> completed = new ArrayList<Reservation>();
 		
-		for(Reservation r : completed) {
+		for(Reservation r : reservations.values()) {
 			if(r.getReservationStatus().equals(ReservationStatus.COMPLETED)) {
 				completed.add(r);
 			}
@@ -113,7 +113,7 @@ public class ReservationDAO {
 	public ArrayList<Reservation> allReservations() {
 		ArrayList<Reservation> all = new ArrayList<Reservation>();
 		
-		for(Reservation r : all) {
+		for(Reservation r : reservations.values()) {
 				all.add(r);
 		}
 		

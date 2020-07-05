@@ -108,6 +108,24 @@ public class ApartmentCommentDAO {
 			}	
 		return false;
 	}
+		
+	public boolean checkHasCommented(String idOne,String apartmentId,ServletContext context) {
+		
+		ApartmentCommentDAO apartmentCommentDAO = (ApartmentCommentDAO) context.getAttribute("ApartmentCommentDAO");
+		context.setAttribute("UserDAO", new UserDAO(context.getRealPath("")));
+		UserDAO userDAO = (UserDAO) context.getAttribute("UserDAO");
+		
+		if(apartmentCommentDAO.getAllComments() != null) {
+		if(apartmentCommentDAO.getAllCommentsFromApartment(UUID.fromString(apartmentId)) != null) {
+		for(ApartmentComment comment : apartmentCommentDAO.getAllCommentsFromApartment(UUID.fromString(apartmentId))) {
+			if(comment.getGuest().equals(userDAO.findbyID(idOne).getUsername())) {
+				return true;
+			}
+		}
+		}	
+	}
+		return false;
+	}
 	
 	
 

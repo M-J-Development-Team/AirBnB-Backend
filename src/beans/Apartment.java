@@ -13,7 +13,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 
-public class Apartment {
+public class Apartment implements Comparable< Apartment > {
 	
 	private ApartmentType type;
 	private int numberOfRooms;
@@ -294,6 +294,11 @@ public class Apartment {
 		
 	}
 	
+	}
+
+	@Override
+	public int compareTo(Apartment arg0) {
+		return Float.compare(this.getPrice(), arg0.getPrice());
 	}
 	
 	

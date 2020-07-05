@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class Reservation {
+public class Reservation implements Comparable< Reservation > {
 
 	private String apartment;
 	private String reservedFrom;
@@ -115,5 +115,10 @@ public class Reservation {
 
 	public void setRentedDates(ArrayList<String> rentedDates) {
 		this.rentedDates = rentedDates;
+	}
+
+	@Override
+	public int compareTo(Reservation arg0) {
+		return Float.compare(this.getPrice(), arg0.getPrice());
 	}
 }

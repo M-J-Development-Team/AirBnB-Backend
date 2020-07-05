@@ -5,17 +5,17 @@ import java.util.UUID;
 public class ApartmentComment {
 	
 	private String guest;
-	private String apartmentName;
+	private UUID apartmentId;
 	private String text;
 	private float rating;
 	private UUID idOne = UUID.randomUUID();
 	private CommentStatus status = CommentStatus.HIDDEN;
 	
 	
-	public ApartmentComment(String guest, String apartmentName, String text, float rating) {
+	public ApartmentComment(String guest, UUID apartmentId, String text, float rating) {
 		super();
 		this.guest = guest;
-		this.apartmentName = apartmentName;
+		this.apartmentId = this.apartmentId;
 		this.text = text;
 		this.rating = rating;
 	}
@@ -38,13 +38,13 @@ public class ApartmentComment {
 
 
 
-	public String getApartmentName() {
-		return apartmentName;
+	public UUID getApartmentId() {
+		return apartmentId;
 	}
 
 
-	public void setApartmentName(String apartmentName) {
-		this.apartmentName = apartmentName;
+	public void setApartmentId(UUID apartmentId) {
+		this.apartmentId = apartmentId;
 	}
 
 

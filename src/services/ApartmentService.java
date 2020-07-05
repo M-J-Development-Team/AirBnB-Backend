@@ -185,7 +185,6 @@ public class ApartmentService {
 
 		apartments.saveApartment(context.getRealPath(""), apartments);
 
-		System.out.println(a.getHost());
 
 		System.out.println(a);
 
@@ -240,9 +239,10 @@ public class ApartmentService {
 		if(a.getName() != "") {
 			if(!a.getName().equals(apartment.getName())) {
 				dao.getApartments().remove(apartment.getName(),apartment);
-				for(ApartmentComment comment: daoComments.getAllCommentsFromApartment(apartment.getName())) {
+				
+				/*for(ApartmentComment comment: daoComments.getAllCommentsFromApartment(apartment.getName())) {
 					comment.setApartmentName(a.getName());
-				}
+				}*/
 				apartment.setName(a.getName());
 			}
 		}
@@ -278,14 +278,21 @@ public class ApartmentService {
 		}
 		
 		if(a.getAmenities().size() != 0) {
-			if(!a.getAmenities().equals(apartment.getAmenities())) {
+			/*if(!a.getAmenities().equals(apartment.getAmenities())) {
 				apartment.setAmenities(a.getAmenities());
+			}*/
+			for(Amenities amenity : a.getAmenities()) {
+				if(apartment.getAmenities().indexOf(amenity) == -1) {
+					apartment.getAmenities().add(amenity);
+				}
 			}
 		}
 		
 		if(a.getLocation() != null) {
-			if(a.getLocation().equals(apartment.getLocation())) {
+			if(!a.getLocation().equals(apartment.getLocation())) {
+				if(a.getLocation().getAddress().getCity() != "" && a.getLocation().getAddress().getNumber() != "" && a.getLocation().getAddress().getStreet() != "" ) {
 				apartment.setLocation(a.getLocation());
+				}
 			}
 		}
 		

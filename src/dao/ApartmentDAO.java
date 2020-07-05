@@ -110,6 +110,115 @@ public class ApartmentDAO {
 		return active;
 	}
 	
+	public ArrayList<Apartment> allApartmentsFromHost(User host){
+		ArrayList<Apartment> active = new ArrayList<Apartment>();
+		
+		for(Apartment a: apartments.values()) {
+			if((a.getHost().equals(host.getUsername()))) {
+			active.add(a);
+			}
+			
+		}
+		
+		return active;
+	}
+	
+	public ArrayList<Apartment> getAllEntirePlaces() {
+		ArrayList<Apartment> entireplaces = new ArrayList<Apartment>();
+		
+		for(Apartment a : apartments.values()) {
+			if(a.getType().equals(ApartmentType.ENTIREPLACE)) {
+				entireplaces.add(a);
+			}
+		}
+		
+		return entireplaces;
+	}
+	
+	public ArrayList<Apartment> getAllRoomTypes() {
+		ArrayList<Apartment> room = new ArrayList<Apartment>();
+		
+		for(Apartment a : apartments.values()) {
+			if(a.getType().equals(ApartmentType.ROOM)) {
+				room.add(a);
+			}
+		}
+		
+		return room;
+	}
+	
+	public ArrayList<Apartment> getAllEntirePlaces(String username) {
+		ArrayList<Apartment> entireplaces = new ArrayList<Apartment>();
+		
+		for(Apartment a : apartments.values()) {
+			if(a.getType().equals(ApartmentType.ENTIREPLACE) && a.getHost().equals(username)) {
+				entireplaces.add(a);
+			}
+		}
+		
+		return entireplaces;
+	}
+	
+	public ArrayList<Apartment> getAllInactive() {
+		ArrayList<Apartment> inactives = new ArrayList<Apartment>();
+		
+		for(Apartment a : apartments.values()) {
+			if(a.getStatus().equals(ApartmentStatus.INACTIVE)) {
+				inactives.add(a);
+			}
+		}
+		
+		return inactives;
+	}
+	
+	public ArrayList<Apartment> getAllActive() {
+		ArrayList<Apartment> actives = new ArrayList<Apartment>();
+		
+		for(Apartment a : apartments.values()) {
+			if(a.getStatus().equals(ApartmentStatus.ACTIVE)) {
+				actives.add(a);
+			}
+		}
+		
+		return actives;
+	}
+	
+	public ArrayList<Apartment> getAllInactiveFromHost(String username) {
+		ArrayList<Apartment> inactives = new ArrayList<Apartment>();
+		
+		for(Apartment a : apartments.values()) {
+			if(a.getStatus().equals(ApartmentStatus.INACTIVE) && a.getHost().equals(username)) {
+				inactives.add(a);
+			}
+		}
+		
+		return inactives;
+	}
+	
+	public ArrayList<Apartment> getAllActiveFromHost(String username) {
+		ArrayList<Apartment> actives = new ArrayList<Apartment>();
+		
+		for(Apartment a : apartments.values()) {
+			if(a.getStatus().equals(ApartmentStatus.ACTIVE) && a.getHost().equals(username)) {
+				actives.add(a);
+			}
+		}
+		
+		return actives;
+	}
+	
+	public ArrayList<Apartment> getAllRoomTypes(String username) {
+		ArrayList<Apartment> room = new ArrayList<Apartment>();
+		
+		for(Apartment a : apartments.values()) {
+			if(a.getType().equals(ApartmentType.ROOM) && a.getHost().equals(username)) {
+				room.add(a);
+			}
+		}
+		
+		return room;
+	}
+	
 	
 	public ArrayList<Apartment> allInactiveApartmentsFromHost(User host){
 		ArrayList<Apartment> active = new ArrayList<Apartment>();
@@ -246,33 +355,40 @@ public class ApartmentDAO {
 	}
 	
 	public ArrayList<Apartment> filterApartmentsByLocation(String location, ArrayList<Apartment> apps) {
+		ArrayList<Apartment> toRemove = new ArrayList<Apartment>();
 		for(Apartment a : apps) {
 			if(!a.getLocation().getAddress().getCity().equals(location)) {
-				apps.remove(a);
+				toRemove.add(a);
 			}
 		}
+		apps.removeAll(toRemove);
 		return apps;
 	}
 	
 	public ArrayList<Apartment> filterApartmentsByGuests(String guests, ArrayList<Apartment> apps) {
+		ArrayList<Apartment> toRemove = new ArrayList<Apartment>();
 		for(Apartment a : apps) {
 			if(!(a.getNumberOfGuests() == Integer.parseInt(guests))) {
-				apps.remove(a);
+				toRemove.add(a);
 			}
 		}
+		apps.removeAll(toRemove);
 		return apps;
 	}
 	
 	public ArrayList<Apartment> filterApartmentsByPrice(String startPrice, String endPrice, ArrayList<Apartment> apps) {
+		ArrayList<Apartment> toRemove = new ArrayList<Apartment>();
 		for(Apartment a : apps) {
 			if(!(a.getPrice() >= Float.parseFloat(startPrice) && a.getPrice() <= Float.parseFloat(endPrice))) {
-				apps.remove(a);
+				toRemove.add(a);
 			}
 		}
+		apps.removeAll(toRemove);
 		return apps;
 	}
 	
 	public ArrayList<Apartment> filterApartmentsByDate(String startDate, String endDate, ArrayList<Apartment> apps) {
+		ArrayList<Apartment> toRemove = new ArrayList<Apartment>();
 		LocalDate start = LocalDate.parse(startDate);
 		LocalDate end = LocalDate.parse(endDate);
 		
@@ -287,25 +403,29 @@ public class ApartmentDAO {
 			ArrayList<String> dates = a.getFreeDates();
 
 			if(!(dates.contains(start) && dates.contains(end))) {
-				apps.remove(a);
+				toRemove.add(a);
 				continue;
 			}
 			
 			for(String d : totalDates) {
 				if(!dates.contains(d)) {
-					apps.remove(a);
+					toRemove.add(a);
 				}
 			}
 		}
-		return null;
+		
+		apps.removeAll(toRemove);
+		return apps;
 	}
 	
 	public ArrayList<Apartment> filterApartmentsByRooms(String from, String to, ArrayList<Apartment> apps) {
+		ArrayList<Apartment> toRemove = new ArrayList<Apartment>();
 		for(Apartment a : apps) {
 			if(!(a.getNumberOfGuests() >= Float.parseFloat(from) && a.getNumberOfGuests() <= Float.parseFloat(to))) {
-				apps.remove(a);
+				toRemove.add(a);
 			}
 		}
+		apps.removeAll(toRemove);
 		return apps;
 	}
 

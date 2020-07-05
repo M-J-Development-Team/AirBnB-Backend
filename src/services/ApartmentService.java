@@ -3,6 +3,8 @@ package services;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -92,9 +94,134 @@ public class ApartmentService {
 
 		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
 		ArrayList<Apartment> apartments = dao.filterApartments(filter, dao.getAllActiveApartments());
+		Collections.sort(apartments, Collections.reverseOrder());
+		return apartments;
+	}
+	
+	@POST
+	@Path("/apartments/sortGuest/{way}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Apartment> sort(@PathParam("way") String way, @Context HttpServletRequest request) {
+
+		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
+		ArrayList<Apartment> apartments = dao.getAllActiveApartments();
+		if(way.equals("ascending")) {
+			Collections.sort(apartments);
+		} else if (way.equals("descending")) {
+			Collections.sort(apartments, Collections.reverseOrder());
+		}
+		
+		return apartments;
+	}
+	
+	@POST
+	@Path("/apartments/sortAdmin/{way}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Apartment> sortAdmin(@PathParam("way") String way, @Context HttpServletRequest request) {
+
+		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
+		ArrayList<Apartment> apartments = dao.allApartments();
+		if(way.equals("ascending")) {
+			Collections.sort(apartments);
+		} else if (way.equals("descending")) {
+			Collections.sort(apartments, Collections.reverseOrder());
+		}
+		
+		return apartments;
+	}
+	
+	@POST
+	@Path("/apartments/sortHost/{way}/{username}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Apartment> sortHost(@PathParam("way") String way, @PathParam("username") String username, @Context HttpServletRequest request) {
+
+		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
+		UserDAO userdao = (UserDAO) context.getAttribute("UserDAO");
+		
+		User host = userdao.findUserByUsername(username);
+		ArrayList<Apartment> apartments = dao.allApartmentsFromHost(host);
+		
+		if(way.equals("ascending")) {
+			Collections.sort(apartments);
+		} else if (way.equals("descending")) {
+			Collections.sort(apartments, Collections.reverseOrder());
+		}
+		
+		return apartments;
+	}
+	
+	@POST
+	@Path("/apartments/filter-by-type/{username}/{type}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Apartment> filterByTypeHost(@PathParam("username") String username,@PathParam("type") String type, @Context HttpServletRequest request) {
+
+		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
+		ArrayList<Apartment> apartments = new ArrayList<Apartment>();
+		if(type.equals("ENTIREPLACE")) {
+			apartments = dao.getAllEntirePlaces(username);
+		} else if(type.equals("ROOM")) {
+			apartments = dao.getAllRoomTypes(username);
+		}
+		
+		return apartments;
+	}
+	
+	@POST
+	@Path("/apartments/filter-by-type/{type}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Apartment> filterByType(@PathParam("type") String type, @Context HttpServletRequest request) {
+
+		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
+		ArrayList<Apartment> apartments = new ArrayList<Apartment>();
+		if(type.equals("ENTIREPLACE")) {
+			apartments = dao.getAllEntirePlaces();
+		} else if(type.equals("ROOM")) {
+			apartments = dao.getAllRoomTypes();
+		}
+		
+		return apartments;
+	}
+	
+	@POST
+	@Path("/apartments/filter-by-status/{status}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Apartment> filterByStatus(@PathParam("status") String status, @Context HttpServletRequest request) {
+
+		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
+		ArrayList<Apartment> apartments = new ArrayList<Apartment>();
+		if(status.equals("INACTIVE")) {
+			apartments = dao.getAllInactive();
+		} else if(status.equals("ACTIVE")) {
+			apartments = dao.getAllActive();
+		}
+		
+		return apartments;
+	}
+	
+	@POST
+	@Path("/apartments/filter-by-stats/{username}/{status}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Apartment> filterByStatusHost(@PathParam("username") String username,@PathParam("status") String status, @Context HttpServletRequest request) {
+
+		ApartmentDAO dao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
+		ArrayList<Apartment> apartments = new ArrayList<Apartment>();
+		if(status.equals("INACTIVE")) {
+			apartments = dao.getAllInactiveFromHost(username);
+		} else if(status.equals("ACTIVE")) {
+			apartments = dao.getAllActiveFromHost(username);
+		}
+		
 		return apartments;
 	}
 
+	
 	@POST
 	@Path("/apartments/adddate/{idOne}")
 	@Consumes(MediaType.APPLICATION_JSON)

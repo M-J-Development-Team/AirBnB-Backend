@@ -257,7 +257,7 @@ public class ReservationService {
 	}
 	
 	@POST
-	@Path("/reservation/filter/{status}/{username}")
+	@Path("/reservation/filterGuest/{status}/{username}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public ArrayList<Reservation> filterByStatusGuest(@PathParam("status") String status, @PathParam("username") String username, @Context HttpServletRequest request) {
@@ -308,7 +308,7 @@ public class ReservationService {
 	}
 	
 	@POST
-	@Path("/reservation/filter/{status}/{username}")
+	@Path("/reservation/filterHost/{status}/{username}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public ArrayList<Reservation> filterByStatusHost(@PathParam("status") String status, @PathParam("username") String username, @Context HttpServletRequest request) {

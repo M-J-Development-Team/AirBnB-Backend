@@ -23,10 +23,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import beans.Apartment;
+import beans.ApartmentComment;
 import beans.ApartmentStatus;
 import beans.Reservation;
 import beans.ReservationStatus;
+import beans.Role;
 import beans.User;
+import dao.ApartmentCommentDAO;
 import dao.ApartmentDAO;
 import dao.ReservationDAO;
 import dao.UserDAO;
@@ -145,6 +148,8 @@ public class ReservationService {
 		UserDAO userdao = (UserDAO) context.getAttribute("UserDAO");
 		User user = userdao.findUserByUsername(r.getGuest());
 		
+		User host = userdao.findUserByUsername(a.getHost());
+		host.getReservations().add(r.getIdOne().toString());
 		
 		dao.getReservations().put(r.getIdOne().toString(), r);
 		context.setAttribute("ReservationDAO", dao);
@@ -205,6 +210,34 @@ public class ReservationService {
 	}
 	
 	@POST
+	@Path("/reservations/deny/{idOne}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deny(@PathParam("idOne") String idOne, @Context HttpServletRequest request)
+	{
+		ReservationDAO dao = (ReservationDAO) context.getAttribute("ReservationDAO");
+		ApartmentDAO apartments = (ApartmentDAO) context.getAttribute("ApartmentDAO");
+		
+		Reservation r = dao.findReservationById(UUID.fromString(idOne));
+		Apartment a = apartments.findApartmentByName(r.getApartment());
+		List<String> toRemove = new ArrayList<String>();
+		
+		for(String date : r.getRentedDates()) {
+			toRemove.add(date);
+		}
+		
+		a.getRentedDates().removeAll(toRemove);
+		a.getFreeDates().addAll(toRemove);
+		
+		r.setReservationStatus(ReservationStatus.DENIED);
+		
+		dao.saveReservation(context.getRealPath(""), dao);
+		apartments.saveApartment(context.getRealPath(""), apartments);
+		
+		return Response.ok().build();
+	}
+	
+	@POST
 	@Path("/reservations/approve/{idOne}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -246,6 +279,42 @@ public class ReservationService {
 		
 		User host = userdao.findUserByUsername(username);
 		return dao.allReservationsForMyApartments(host);
+	}
+	
+	@GET
+	@Path("/check-can-comment/{idOne}/{apartmentId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response checkIfCanComment(@PathParam("idOne") String idOne,@PathParam("apartmentId") String apartmentId,@Context HttpServletRequest request) {
+		
+		ReservationDAO dao = (ReservationDAO) context.getAttribute("ReservationDAO");
+		context.setAttribute("ApartmentDAO", new ApartmentDAO(context.getRealPath("")));
+		ApartmentDAO apartmentdao = (ApartmentDAO) context.getAttribute("ApartmentDAO");
+		
+		context.setAttribute("ApartmentCommentDAO", new ApartmentCommentDAO(context.getRealPath("")));
+		ApartmentCommentDAO apartmentCommentDAO = (ApartmentCommentDAO) context.getAttribute("ApartmentCommentDAO");
+		
+		context.setAttribute("UserDAO", new UserDAO(context.getRealPath("")));
+		UserDAO userDAO = (UserDAO) context.getAttribute("UserDAO");
+		
+		User guest = userDAO.findbyID(idOne);
+		ArrayList<String> s = apartmentdao.findApartmentById(apartmentId).getReservations();		
+		ArrayList<Reservation> reservationsList = new ArrayList<Reservation>();
+		
+		for(String r : apartmentdao.findApartmentById(apartmentId).getReservations()) {
+			Reservation res = dao.findReservationById(UUID.fromString(r));
+			if((res.getReservationStatus().equals(ReservationStatus.DENIED) || res.getReservationStatus().equals(ReservationStatus.COMPLETED)) && res.getGuest().equals(guest.getUsername())) {
+				if(!apartmentCommentDAO.checkHasCommented(idOne, apartmentId, context)) {
+				return Response.ok().build();
+				}else {
+					return Response.serverError().build();
+				}
+			}
+		}
+		
+		
+		return  Response.serverError().build();
+	
 	}
 	
 

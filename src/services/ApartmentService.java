@@ -205,7 +205,7 @@ public class ApartmentService {
 	}
 	
 	@POST
-	@Path("/apartments/filter-by-stats/{username}/{status}")
+	@Path("/apartments/filter-by-status/{username}/{status}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public ArrayList<Apartment> filterByStatusHost(@PathParam("username") String username,@PathParam("status") String status, @Context HttpServletRequest request) {

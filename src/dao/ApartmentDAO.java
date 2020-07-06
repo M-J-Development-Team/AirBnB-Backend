@@ -402,7 +402,7 @@ public class ApartmentDAO {
 		for(Apartment a : apps) {
 			ArrayList<String> dates = a.getFreeDates();
 
-			if(!(dates.contains(start) && dates.contains(end))) {
+			if(!(dates.contains(startDate) && dates.contains(endDate))) {
 				toRemove.add(a);
 				continue;
 			}

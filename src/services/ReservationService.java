@@ -59,7 +59,7 @@ public class ReservationService {
 		ReservationDAO dao = (ReservationDAO) context.getAttribute("ReservationDAO");
 		
 		for(Reservation r : dao.getReservations().values()) {
-			if(LocalDate.parse(r.getReservedTill()).isAfter(LocalDate.now()) && r.getReservationStatus().equals(ReservationStatus.ACCEPTED)) {
+			if(LocalDate.parse(r.getReservedTill()).isBefore(LocalDate.now()) && r.getReservationStatus().equals(ReservationStatus.ACCEPTED)) {
 				r.setReservationStatus(ReservationStatus.COMPLETED);
 			}
 		}
